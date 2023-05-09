@@ -1,9 +1,19 @@
 body
 {
-	background-color: lightgrey;
+	font-family: Arial;
+	margin: 0;
 }
 
-h1
+logo
 {
-	color: green;
+	right: 50px;
+}
+
+.header
+{
+	padding: 1px;
+	text-align: left;
+	background: #4051b5;
+	color: white;
+	font-size: 10px;
 }
