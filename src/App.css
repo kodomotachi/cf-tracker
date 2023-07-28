@@ -1,4 +1,4 @@
-.App {
+/* .App {
   text-align: center;
   
 }
@@ -21,7 +21,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  /* font-size: calc(10px + 2vmin); */
+  font-size: calc(10px + 2vmin);
   color: white;
   font-size: 20px;
 }
@@ -40,7 +40,7 @@
 }
 
 /* just testing */
-table {
+/* table {
   font-family: arial, sans-serif;
   border-collapse: collapse;
   width: 100%;
@@ -54,4 +54,28 @@ td, th {
 
 tr:nth-child(even) {
   background-color: #dddddd;
+} */
+
+.btn-secondary
+{
+  color: #ffff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn {
+  display: inline-block;
+  font-weight: 400;
+  color: #212529;
+  text-align: center;
+  vertical-align: middle;
+  -webkit-user-select: none;
+  user-select: none;
+  background-color: initial;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  /* transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out; */
 }
