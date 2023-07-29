@@ -3,6 +3,8 @@
 Hi guys, this is my project about tracking for your practicing on Codeforces.com
 
 Author: KodomoTachi
+Developers: Sterryn, zuy1412, Shirokun, Clitch
+Time-manager: Kisa
 Date: 07/05/2023, at Thu Duc city, Ho Chi Minh city, Vietnam.
 
 # Getting Started with Create React App
