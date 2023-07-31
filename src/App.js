@@ -47,17 +47,19 @@ function App() {
     //   </header>
     // </div>
     
-    <div className="row">
-      <div role="group" className="tale-tab btn-group">
-        <button type="button" className="btn btn-secondary active">Div. 1</button>
-        <button type="button" className="btn btn-secondary active">Div. 2</button>
-        <button type="button" className="btn btn-secondary active">Div. 3</button>
-        <button type="button" className="btn btn-secondary active">Div. 4</button>
-        <button type="button" className="btn btn-secondary active">Educational</button>
-        <button type="button" className="btn btn-secondary active">Div. 1 + Div. 2</button>
-        <button type="button" className="btn btn-secondary active">Global</button>
-        <button type="button" className="btn btn-secondary active">Others</button>
-        <button type="button" className="btn btn-secondary active">All</button>
+    <div class="pt-3 ps-3">
+      <div class="d-flex flex-column">
+        <div class="btn-group rounded-0 btn-group d-flex flex-wrap" role="group" aria-label="First group">
+          <button class="p-1 btn btn-secondary active">Div. 1</button>
+          <button class="p-1 btn btn-secondary">Div. 2</button>
+          <button class="p-1 btn btn-secondary">Div. 3</button>
+          <button class="p-1 btn btn-secondary">Div. 4</button>
+          <button class="p-1 btn btn-secondary">Educational</button>
+          <button class="p-1 btn btn-secondary">Div. 1 + Div. 2</button>
+          <button class="p-1 btn btn-secondary">Global</button>
+          <button class="p-1 btn btn-secondary">Others</button>
+          <button class="p-1 btn btn-secondary">All</button>
+        </div>
       </div>
     </div>
   );
