@@ -56,6 +56,11 @@ tr:nth-child(even) {
   background-color: #dddddd;
 } */
 
+:root
+{
+  font-family: "Fira Sans";
+}
+
 .p-1{
   color: white;
   /* border-radius: 6px; */
@@ -63,7 +68,7 @@ tr:nth-child(even) {
   padding: 5px 17px;
   background: #6c757d;
   font-size: 18px;
-  font-family: "Roboto", sans-serif;
+  /* font-family: "Roboto", sans-serif; */
   cursor: pointer;
 }
 
@@ -77,7 +82,7 @@ tr:nth-child(even) {
   padding: 5px 17px;
   background: #6c757d;
   font-size: 18px;
-  font-family: "Roboto", sans-serif;
+  /* font-family: "Roboto", sans-serif; */
   cursor: pointer;
 }
 
@@ -91,7 +96,7 @@ tr:nth-child(even) {
   padding: 5px 17px;
   background: #6c757d;
   font-size: 18px;
-  font-family: "Roboto", sans-serif;
+  /* font-family: "Roboto", sans-serif; */
   cursor: pointer; 
 }
 
@@ -147,7 +152,7 @@ tr:nth-child(even) {
   color: #333333;
   cursor: pointer;
   display: inline-block;
-  font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  /* font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif; */
   font-size: 14px;
   font-weight: 500;
   line-height: 20px;
@@ -174,4 +179,23 @@ tr:nth-child(even) {
 .button-2:active {
   color: white !important;
   background: #5a6268;
+}
+
+.p-4
+{
+  color: white;
+  font-size: 16px;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.sterryn
+{
+  background: #33414d;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border: 1px solid #6c757d;
+
 }

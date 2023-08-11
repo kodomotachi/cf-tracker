@@ -1,5 +1,5 @@
-import logo from './logo.svg';
-import './App.css';
+// import logo from './logo.svg';
+import './contest-button.css';
 
 function App() {
   return (
@@ -47,24 +47,52 @@ function App() {
     //   </header>
     // </div>
     
-    <div class="pt-3 ps-3">
-      <div class="d-flex flex-column">
-        <div class="btn-group rounded-0 btn-group d-flex flex-wrap" role="group" aria-label="First group">
-          <button class="p-2">Div. 1</button>
-          <button class="p-1">Div. 2</button>
-          <button class="p-1">Div. 3</button>
-          <button class="p-1">Div. 4</button>
-          <button class="p-1">Educational</button>
-          <button class="p-1">Div. 1 + Div. 2</button>
-          <button class="p-1">Global</button>
-          <button class="p-1">Others</button>
-          <button class="p-3">All</button>
-        
-          <button class="button-2" role="button">Button 2</button>
-
-          
+    <div class="contest-button">
+      <button class="left">
+        <div class="content">
+          Div. 1
         </div>
-      </div>
+      </button>
+      <button class="among">
+        <div class="content">
+          Div. 2
+        </div>
+      </button>
+      <button class="among">
+        <div class="content">
+          Div. 3
+        </div>
+      </button>
+      <button class="among">
+        <div class="content">
+          Div. 4
+        </div>
+      </button>
+      <button class="among">
+        <div class="content">
+          Educational
+        </div>
+      </button>
+      <button class="among">
+        <div class="content">
+          Div. 1 + Div. 2
+        </div>
+      </button>
+      <button class="among">
+        <div class="content">
+          Global
+        </div>
+      </button>
+      <button class="among">
+        <div class="content">
+          Global
+        </div>
+      </button>
+      <button class="right">
+        <div class="content">
+          All
+        </div>
+      </button>  
     </div>
   );
 }
