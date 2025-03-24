@@ -4,7 +4,6 @@ Hi guys, this is my project about tracking for your practicing on Codeforces.com
 
 Author: KodomoTachi<br>
 Developers: Sterryn, zuy1412, Shirokun<br>
-Time-manager: Kisa<br>
 Date: 07/05/2023, at Thu Duc city, Ho Chi Minh city, Vietnam.<br>
 
 # React + TypeScript + Vite
