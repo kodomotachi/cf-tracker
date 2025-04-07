@@ -1,0 +1,58 @@
+@import url(../../color/color-global.css);
+.header {
+  height: 64px;
+  background-color: var(--background-color);
+  margin-bottom: 24px;
+}
+.header__container {
+  margin: 0 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header__logo {
+}
+.header__logo-text {
+  color: var(--highlight-color);
+  font-weight: 600;
+  font-size: 20px;
+}
+.header__menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header__menu-nav {
+  margin: 0 48px;
+}
+.header__menu-nav-item {
+  color: var(--muted-color);
+  font-size: 16px;
+  padding: 0 16px;
+  line-height: 64px;
+  font-weight: 500;
+}
+
+.header__menu-nav-item:hover {
+  color: var(--highlight-color);
+}
+
+.header__search-box {
+}
+
+.header__search-box-input {
+  height: 40px;
+  width: 240px;
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 0px 12px;
+}
+
+.header__search-box-input::placeholder {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.header__search-box-input:focus {
+  outline: 2px solid var(--sub-color);
+}

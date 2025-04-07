@@ -1,0 +1,13 @@
+:root {
+  /* --sub-color: #8b7c93; */
+  --prime-color: #8b7c93;
+  --sub-color: #b89bb3;
+
+  --background-color: #22272e;
+  --line-color: hsla(215, 15%, 16%, 0.3);
+
+  --muted-color: rgba(255, 255, 255, 0.55);
+  --highlight-color: rgba(255, 255, 255, 1);
+
+  --text-color: #212529;
+}

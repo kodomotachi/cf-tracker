@@ -1,0 +1,112 @@
+.problems {
+  margin: 0 80px;
+}
+.problems__menu {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.problems__menu-search-box {
+  width: 50%;
+}
+.problems__menu-search-box-input {
+  height: 40px;
+  width: 100%;
+  font-size: 16px;
+  border: 1px solid var(--line-color);
+  border-radius: 5px;
+  padding: 0 16px;
+}
+.problems__menu-search-box-input::placeholder {
+  font-size: 16px;
+  font-weight: 500;
+}
+.problems__menu-search-box-input:focus {
+  outline: 3px solid var(--sub-color);
+}
+.problems__menu-display {
+  font-weight: 500;
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.problems__btn-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.7;
+}
+.problems__menu-btn {
+  font-size: 18px;
+  padding: 0 16px;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.problems__menu-btn:hover {
+  color: var(--prime-color);
+}
+
+.problems__table {
+  width: 100%;
+  margin-bottom: 24px;
+}
+.problems__table__thread {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--line-color);
+  border-bottom: 1px solid var(--line-color);
+  border-left: 1px solid var(--line-color);
+}
+.problems__table__thread-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-right: 1px solid var(--line-color);
+  height: 48px;
+  padding: 0 12px;
+}
+
+.problems__table__thread-item-text {
+  color: var(--text-color);
+  font-weight: 600;
+  font-size: 16px;
+}
+.problems__table__thread-item-group {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.problems__table__thread-item-icon {
+  line-height: 0.5;
+  font-size: 12px;
+  margin-left: 12px;
+}
+
+.problems__table__content {
+  border-left: 1px solid var(--line-color);
+}
+
+.problems__table__content-container {
+  display: flex;
+}
+
+.problems__table__content-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 48px;
+  padding: 0 12px;
+  border-right: 1px solid var(--line-color);
+  border-bottom: 1px solid var(--line-color);
+}
+
+.problems__table__content-item-text {
+  color: var(--text-color);
+  font-weight: 500;
+  font-size: 16px;
+}
