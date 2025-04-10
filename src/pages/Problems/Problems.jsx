@@ -9,6 +9,14 @@ function Problems({ dataUser }) {
   const [search, setSearch] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [limitPage, setLimitPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [gotoPage, setGotoPage] = useState(1);
+  const [perPage, setPerPage] = useState([10, 20, 50, 100, 200]);
+
+  const [minPage, setMinPage] = useState(1);
+  const [maxPage, setMaxPage] = useState(1);
+
   const [sortId, setSortId] = useState(-1);
   const [sortRating, setSortRating] = useState(-1);
   const [sortSolvedCount, setSortSolvedCount] = useState(-1);
@@ -111,11 +119,6 @@ function Problems({ dataUser }) {
 
   const handleChange = (selectedValues) => {
     setSearch(selectedValues);
-    if (selectedValues.trim() === "") {
-      setFilteredUniversities([]);
-      setShowDropdown(false);
-      return;
-    }
 
     const results = data.filter(
       (value) =>
@@ -130,7 +133,15 @@ function Problems({ dataUser }) {
 
   useEffect(() => {
     setDataDisplay(data);
+    if (data.length > 0 && !perPage.includes(data.length)) {
+      setPerPage([10, 20, 50, 100, 200, data.length]);
+    }
+    setMaxPage(Math.ceil(data.length / limitPage));
   }, [data]);
+
+  useEffect(() => {
+    if (gotoPage != "") setCurrentPage(gotoPage);
+  }, [gotoPage]);
 
   const handleRandomShuffle = () => {
     const randomIndex = Math.floor(Math.random() * data.length);
@@ -140,6 +151,19 @@ function Problems({ dataUser }) {
 
   const handleRefresh = () => {
     setDataDisplay(data);
+  };
+
+  const handleChangePage = (value) => {
+    // Cho phép xóa hết để nhập lại
+    if (value === "") {
+      setGotoPage("");
+      return;
+    }
+    let pageCurrent = Math.floor(value);
+    if (value <= 0) pageCurrent = minPage;
+    if (value > maxPage) pageCurrent = maxPage;
+
+    setGotoPage(pageCurrent);
   };
 
   return (
@@ -154,7 +178,9 @@ function Problems({ dataUser }) {
             className="problems__menu-search-box-input"
           />
         </div>
-        <div className="problems__menu-display">Showing 100 of 550</div>
+        <div className="problems__menu-display">
+          Showing {limitPage} of {dataDisplay.length}
+        </div>
         <div className="problems__btn-group">
           <div
             onClick={() => handleRandomShuffle()}
@@ -247,55 +273,105 @@ function Problems({ dataUser }) {
         </div>
         <div className="problems__table__content">
           {/* https://codeforces.com/problemset/problem/2092/D */}
-          {dataDisplay.slice(0, 50).map((value, index) => (
-            <div className="problems__table__content-container" key={index}>
-              <div className="problems__table__content-item width-8">
-                <div className="problems__table__content-item-text">
-                  {index + 1}
+          {dataDisplay
+            .slice((currentPage - 1) * limitPage, currentPage * limitPage)
+            .map((value, index) => (
+              <div className="problems__table__content-container" key={index}>
+                <div className="problems__table__content-item width-8">
+                  <div className="problems__table__content-item-text">
+                    {(currentPage - 1) * limitPage + index + 1}
+                  </div>
+                </div>
+                <div className="problems__table__content-item width-16">
+                  <div className="problems__table__content-item-text">
+                    {value.contestId}
+                    {value.index}
+                  </div>
+                </div>
+                <div className="problems__table__content-item width-64">
+                  <a
+                    href={`https://codeforces.com/problemset/problem/${value.contestId}/${value.index}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="problems__table__content-item-text cursor-pointer"
+                  >
+                    {value.name}
+                  </a>
+                </div>
+                <div className="problems__table__content-item width-16">
+                  <div className="problems__table__content-item-text">
+                    {value.rating ? value.rating : "-"}
+                  </div>
+                </div>
+                <div className="problems__table__content-item width-20">
+                  <div className="problems__table__content-item-text">
+                    {value.solvedCount ? value.solvedCount : "-"}
+                  </div>
                 </div>
               </div>
-              <div className="problems__table__content-item width-16">
-                <div className="problems__table__content-item-text">
-                  {value.contestId}
-                  {value.index}
-                </div>
-              </div>
-              <div className="problems__table__content-item width-64">
-                <a
-                  href={`https://codeforces.com/problemset/problem/${value.contestId}/${value.index}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="problems__table__content-item-text cursor-pointer"
-                >
-                  {value.name}
-                </a>
-              </div>
-              <div className="problems__table__content-item width-16">
-                <div className="problems__table__content-item-text">
-                  {value.rating ? value.rating : "-"}
-                </div>
-              </div>
-              <div className="problems__table__content-item width-20">
-                <div className="problems__table__content-item-text">
-                  {value.solvedCount ? value.solvedCount : "-"}
-                </div>
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
       <div className="problems__table-page-bar">
-        <div className="problems__table-page-bar-item">
-          <i class="fa-solid fa-angles-left"></i>
+        <div className="problems__table-page-bar-container">
+          <div
+            onClick={() => handleChangePage(minPage)}
+            className="problems__table-page-bar-item problems__table-page-bar-item--arrow"
+          >
+            <i class="fa-solid fa-angles-left"></i>
+          </div>
+          <div
+            onClick={() => handleChangePage(currentPage - 1)}
+            className="problems__table-page-bar-item problems__table-page-bar-item--arrow"
+          >
+            <i class="fa-solid fa-angle-left"></i>
+          </div>
+          <div
+            onClick={() => handleChangePage(currentPage + 1)}
+            className="problems__table-page-bar-item problems__table-page-bar-item--arrow"
+          >
+            <i class="fa-solid fa-angle-right"></i>
+          </div>
+          <div
+            onClick={() => handleChangePage(maxPage)}
+            className="problems__table-page-bar-item problems__table-page-bar-item--arrow"
+          >
+            <i class="fa-solid fa-angles-right"></i>
+          </div>
         </div>
-        <div className="problems__table-page-bar-item">
-          <i class="fa-solid fa-angle-left"></i>
+
+        <div className="problems__table-page-bar-item problems__table-page-bar-item--info">
+          <span>
+            {" "}
+            Page {currentPage} of {maxPage}
+          </span>
         </div>
-        <div className="problems__table-page-bar-item">
-          <i class="fa-solid fa-angles-right"></i>
+        <div className="problems__table-page-bar-item problems__table-page-bar-item--goto">
+          <span>Go to page:</span>
+          <input
+            type="number"
+            name="gotoPage"
+            placeholder="Max Rating"
+            step="1"
+            value={gotoPage}
+            onChange={(e) => handleChangePage(e.target.value)}
+          />
         </div>
-        <div className="problems__table-page-bar-item">
-          <i class="fa-solid fa-angle-right"></i>
+        <div className="problems__table-page-bar-item problems__table-page-bar-item--per-page">
+          <span>Per Page:</span>
+          <div className="problems__table-page-bar-item--per-page-container">
+            <select
+              onChange={(e) => {
+                setLimitPage(e.target.value);
+                setGotoPage(1);
+              }}
+            >
+              {perPage.map((value, index) => (
+                <option value={value}>{value}</option>
+              ))}
+            </select>
+            <i class="fa-solid fa-angle-down"></i>
+          </div>
         </div>
       </div>
     </div>
