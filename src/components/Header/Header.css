@@ -1,6 +1,6 @@
 @import url(../../color/color-global.css);
 .header {
-  height: 64px;
+  height: 68px;
   background-color: var(--background-color);
   margin-bottom: 24px;
 }
@@ -11,6 +11,10 @@
   align-items: center;
 }
 .header__logo {
+}
+
+.header__logo-img {
+  height: 68px;
 }
 .header__logo-text {
   color: var(--highlight-color);

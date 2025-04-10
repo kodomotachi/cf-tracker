@@ -1,15 +1,16 @@
 import React from "react";
 import "./Header.css";
 import { Link } from "react-router-dom";
+import logo from "../../img/cftracker_logo.png";
 
 function Header() {
   return (
     <div className="header">
       <div className="header__container">
-        <div className="header__logo">
-          <div className="header__logo-img"></div>
-          <div className="header__logo-text">CF Tracker</div>
-        </div>
+        <a href="/" className="header__logo">
+          <img className="header__logo-img" src={logo} alt="" />
+          {/* <div className="header__logo-text">CF Tracker</div> */}
+        </a>
         <div className="header__menu">
           <div className="header__menu-nav">
             <Link to="/stats" className="header__menu-nav-item">

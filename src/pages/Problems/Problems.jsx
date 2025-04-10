@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import "./Problems.css";
-function Problems() {
+function Problems({ dataUser }) {
   const [problems, setProblems] = useState([]);
   const [problemsStatistics, setProblemsStatistics] = useState([]);
   const [mergedProblems, setMergedProblems] = useState([]);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(dataUser ? dataUser : []);
+  const [dataDisplay, setDataDisplay] = useState([]);
   const [search, setSearch] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -42,6 +43,7 @@ function Problems() {
 
     merged.sort((a, b) => (a.rating || 100000) - (b.rating || 100000));
     setMergedProblems(merged);
+    if (dataUser != null) return;
     setData(merged);
   }, [problems, problemsStatistics]);
 
@@ -68,9 +70,8 @@ function Problems() {
   };
 
   useEffect(() => {
-    console.log(sortId);
     if (sortId == -1) return;
-    let sorted = [...mergedProblems];
+    let sorted = [...data];
     if (sortId == 1)
       sorted.sort((a, b) => {
         if (a.contestId !== b.contestId) {
@@ -90,7 +91,7 @@ function Problems() {
 
   useEffect(() => {
     if (sortRating == -1) return;
-    let sorted = [...mergedProblems];
+    let sorted = [...data];
     if (sortRating == 1)
       sorted.sort((a, b) => (a.rating || 100000) - (b.rating || 100000));
     else if (sortRating == 0)
@@ -100,7 +101,7 @@ function Problems() {
 
   useEffect(() => {
     if (sortSolvedCount == -1) return;
-    let sorted = [...mergedProblems];
+    let sorted = [...data];
     if (sortSolvedCount == 1)
       sorted.sort((a, b) => (a.solvedCount || 0) - (b.solvedCount || 0));
     else if (sortSolvedCount == 0)
@@ -116,7 +117,7 @@ function Problems() {
       return;
     }
 
-    const results = mergedProblems.filter(
+    const results = data.filter(
       (value) =>
         String(value.contestId + value.index) // Đảm bảo contestId là chuỗi
           .toLowerCase()
@@ -125,6 +126,20 @@ function Problems() {
     );
 
     setData(results);
+  };
+
+  useEffect(() => {
+    setDataDisplay(data);
+  }, [data]);
+
+  const handleRandomShuffle = () => {
+    const randomIndex = Math.floor(Math.random() * data.length);
+    const randomItem = data[randomIndex];
+    setDataDisplay([randomItem]);
+  };
+
+  const handleRefresh = () => {
+    setDataDisplay(data);
   };
 
   return (
@@ -141,10 +156,13 @@ function Problems() {
         </div>
         <div className="problems__menu-display">Showing 100 of 550</div>
         <div className="problems__btn-group">
-          <div className="problems__menu-btn">
+          <div
+            onClick={() => handleRandomShuffle()}
+            className="problems__menu-btn"
+          >
             <i class="fa-solid fa-shuffle"></i>
           </div>
-          <div className="problems__menu-btn">
+          <div onClick={() => handleRefresh()} className="problems__menu-btn">
             <i class="fa-solid fa-rotate-right"></i>
           </div>
         </div>
@@ -229,7 +247,7 @@ function Problems() {
         </div>
         <div className="problems__table__content">
           {/* https://codeforces.com/problemset/problem/2092/D */}
-          {data.slice(0, 50).map((value, index) => (
+          {dataDisplay.slice(0, 50).map((value, index) => (
             <div className="problems__table__content-container" key={index}>
               <div className="problems__table__content-item width-8">
                 <div className="problems__table__content-item-text">
@@ -264,6 +282,20 @@ function Problems() {
               </div>
             </div>
           ))}
+        </div>
+      </div>
+      <div className="problems__table-page-bar">
+        <div className="problems__table-page-bar-item">
+          <i class="fa-solid fa-angles-left"></i>
+        </div>
+        <div className="problems__table-page-bar-item">
+          <i class="fa-solid fa-angle-left"></i>
+        </div>
+        <div className="problems__table-page-bar-item">
+          <i class="fa-solid fa-angles-right"></i>
+        </div>
+        <div className="problems__table-page-bar-item">
+          <i class="fa-solid fa-angle-right"></i>
         </div>
       </div>
     </div>
