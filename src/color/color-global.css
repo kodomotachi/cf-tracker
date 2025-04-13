@@ -4,10 +4,19 @@
   --sub-color: #b89bb3;
 
   --background-color: #22272e;
+
   --line-color: hsla(215, 15%, 16%, 0.3);
+  --sub-line-color: hsla(215, 15%, 16%, 0.15);
 
   --muted-color: rgba(255, 255, 255, 0.55);
+  --disable-color: #565e64;
   --highlight-color: rgba(255, 255, 255, 1);
+
+  --solved-color: #d4edc9;
+  --attemped-color: #ffe3e3;
+
+  --successful-color: #01a601;
+  --bug-color: #b43e32;
 
   --text-color: #212529;
 }

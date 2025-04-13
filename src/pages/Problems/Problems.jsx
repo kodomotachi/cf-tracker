@@ -1,35 +1,132 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState, useRef } from "react";
 import "./Problems.css";
-function Problems({ dataUser }) {
+function Problems({ codeforce, tachi, dataUser }) {
   const [problems, setProblems] = useState([]);
   const [problemsStatistics, setProblemsStatistics] = useState([]);
   const [mergedProblems, setMergedProblems] = useState([]);
-  const [data, setData] = useState(dataUser ? dataUser : []);
-  const [dataDisplay, setDataDisplay] = useState([]);
-  const [search, setSearch] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
 
   const [limitPage, setLimitPage] = useState(10);
   const [currentPage, setCurrentPage] = useState(1);
-  const [gotoPage, setGotoPage] = useState(1);
   const [perPage, setPerPage] = useState([10, 20, 50, 100, 200]);
 
   const [minPage, setMinPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
+  const [minRating, setMinRating] = useState(0);
+  const [maxRating, setMaxRating] = useState(4000);
+  const [minContestId, setMinContestId] = useState(1);
+  const [maxContestId, setMaxContestId] = useState(4000);
+  const [listTag, setListTag] = useState([]);
 
   const [sortId, setSortId] = useState(-1);
   const [sortRating, setSortRating] = useState(-1);
   const [sortSolvedCount, setSortSolvedCount] = useState(-1);
+  const [filterSolved, setFilterSolved] = useState(1);
+  const [filterAttemped, setFilterAttemped] = useState(0);
+  const [filterUnsolved, setFilterUnsolved] = useState(0);
+
+  const [search, setSearch] = useState([]);
+  const [gotoPage, setGotoPage] = useState(1);
+  const [tagSelected, setTagSelected] = useState([]);
+  const [dataDisplay, setDataDisplay] = useState([]);
+
+  const [filterTableToggle, setfilterTableToggle] = useState(0);
+  const dropdownRef = useRef(null);
+
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("https://codeforces.com/api/problemset.problems?tags=implementation")
+    if (dataUser == "") return;
+    const verdictMap = {};
+
+    dataUser.forEach((value) => {
+      const key = `${value.problem.contestId}-${value.problem.index}`;
+      // Chỉ lấy verdict OK ưu tiên nhất, nếu không thì verdict khác
+      if (!verdictMap[key] || value.verdict === "OK") {
+        verdictMap[key] = value.verdict;
+      }
+    });
+
+    const result = mergedProblems
+      .filter((problem) => {
+        const key = `${problem.contestId}-${problem.index}`;
+        const verdict = verdictMap[key] || null;
+
+        const isSolved = verdict === "OK";
+        const isAttempted = verdict && verdict !== "OK";
+        const isUnsolved = !verdict;
+
+        if (
+          (!filterSolved || !isSolved) &&
+          (!filterAttemped || !isAttempted) &&
+          (!filterUnsolved || !isUnsolved)
+        ) {
+          return false;
+        }
+
+        if (tagSelected && tagSelected.length > 0) {
+          const hasTag = tagSelected.some((tag) => problem.tags.includes(tag));
+          if (!hasTag) return false;
+        }
+
+        if (
+          (minRating && problem.rating < minRating) ||
+          (maxRating && problem.rating > maxRating)
+        ) {
+          return false;
+        }
+
+        if (
+          (minContestId && problem.contestId < minContestId) ||
+          (maxContestId && problem.contestId > maxContestId)
+        ) {
+          return false;
+        }
+
+        return true;
+      })
+      .map((problem) => {
+        const key = `${problem.contestId}-${problem.index}`;
+        return {
+          contestId: problem.contestId,
+          index: problem.index,
+          name: problem.name,
+          points: problem.points,
+          rating: problem.rating,
+          tag: problem.tags,
+          solvedCount: problem.solvedCount,
+          verdict: verdictMap[key] || null,
+        };
+      });
+
+    setData(result);
+    setDataDisplay(result);
+  }, [
+    dataUser,
+    filterSolved,
+    filterAttemped,
+    filterUnsolved,
+    tagSelected,
+    minRating,
+    maxRating,
+    minContestId,
+    maxContestId,
+  ]);
+
+  useEffect(() => {
+    fetch(codeforce + "/api/problemset.problems")
       .then((res) => res.json())
-      .then((data) => {
-        if (data.status === "OK") {
-          setProblems(data.result.problems);
-          setProblemsStatistics(data.result.problemStatistics);
+      .then((res) => {
+        if (res.status === "OK") {
+          setProblems(res.result.problems);
+          setProblemsStatistics(res.result.problemStatistics);
+          const tagSet = new Set();
+          res.result.problems.forEach((problem) => {
+            problem.tags.forEach((tag) => tagSet.add(tag));
+          });
+          setListTag([...tagSet]);
         } else {
-          console.error("Lỗi khi lấy dữ liệu:", data);
+          console.error("Lỗi khi lấy dữ liệu:", res);
         }
       })
       .catch((error) => console.error("Lỗi kết nối API:", error))
@@ -51,7 +148,6 @@ function Problems({ dataUser }) {
 
     merged.sort((a, b) => (a.rating || 100000) - (b.rating || 100000));
     setMergedProblems(merged);
-    if (dataUser != null) return;
     setData(merged);
   }, [problems, problemsStatistics]);
 
@@ -117,6 +213,19 @@ function Problems({ dataUser }) {
     setData(sorted);
   }, [sortSolvedCount]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setfilterTableToggle(0);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const handleChange = (selectedValues) => {
     setSearch(selectedValues);
 
@@ -128,16 +237,16 @@ function Problems({ dataUser }) {
         value.name.toLowerCase().includes(selectedValues.toLowerCase()) // Kiểm tra đúng tên thuộc tính
     );
 
-    setData(results);
+    setDataDisplay(results);
   };
 
   useEffect(() => {
     setDataDisplay(data);
-    if (data.length > 0 && !perPage.includes(data.length)) {
-      setPerPage([10, 20, 50, 100, 200, data.length]);
-    }
+    //  if (data.length > 0 && !perPage.includes(data.length)) {
+    //    setPerPage([10, 20, 50, 100, 200, data.length]);
+    //  }
     setMaxPage(Math.ceil(data.length / limitPage));
-  }, [data]);
+  }, [data, limitPage]);
 
   useEffect(() => {
     if (gotoPage != "") setCurrentPage(gotoPage);
@@ -146,10 +255,12 @@ function Problems({ dataUser }) {
   const handleRandomShuffle = () => {
     const randomIndex = Math.floor(Math.random() * data.length);
     const randomItem = data[randomIndex];
+    setSearch("");
     setDataDisplay([randomItem]);
   };
 
   const handleRefresh = () => {
+    setSearch("");
     setDataDisplay(data);
   };
 
@@ -164,6 +275,49 @@ function Problems({ dataUser }) {
     if (value > maxPage) pageCurrent = maxPage;
 
     setGotoPage(pageCurrent);
+  };
+
+  const handleChangeFilterMinRating = (value) => {
+    if (value === "") {
+      setMinRating("");
+      return;
+    }
+    let rating = Math.floor(value);
+    if (value <= 0) rating = minPage;
+
+    setMinRating(rating);
+  };
+
+  const handleChangeFilterMaxRating = (value) => {
+    if (value === "") {
+      setMaxRating("");
+      return;
+    }
+    let rating = Math.floor(value);
+    if (value <= 0) rating = minPage;
+
+    setMaxRating(rating);
+  };
+
+  const handleChangeFilterMinContestId = (value) => {
+    if (value === "") {
+      handleChangeFilterMinContestId("");
+      return;
+    }
+    let pageCurrent = Math.floor(value);
+    if (value <= 0) pageCurrent = minPage;
+
+    setMinContestId(pageCurrent);
+  };
+  const handleChangeFilterMaxContestId = (value) => {
+    if (value === "") {
+      handleChangeFilterMaxContestId("");
+      return;
+    }
+    let pageCurrent = Math.floor(value);
+    if (value <= 0) pageCurrent = minPage;
+
+    setMaxContestId(pageCurrent);
   };
 
   return (
@@ -186,14 +340,178 @@ function Problems({ dataUser }) {
             onClick={() => handleRandomShuffle()}
             className="problems__menu-btn"
           >
-            <i class="fa-solid fa-shuffle"></i>
+            <i class="fa-solid fa-shuffle problems__menu-btn-icon"></i>
           </div>
           <div onClick={() => handleRefresh()} className="problems__menu-btn">
-            <i class="fa-solid fa-rotate-right"></i>
+            <i class="fa-solid fa-rotate-right problems__menu-btn-icon"></i>
           </div>
         </div>
-        <div className="problems__menu-btn">
-          <i class="fa-solid fa-filter"></i>
+        <div
+          onClick={() => setfilterTableToggle(!filterTableToggle)}
+          className="problems__menu-btn"
+        >
+          <i
+            className={
+              filterTableToggle
+                ? "fa-solid fa-filter problems__menu-btn-icon active"
+                : "fa-solid fa-filter problems__menu-btn-icon"
+            }
+          ></i>
+          <div
+            onClick={(e) => e.stopPropagation()}
+            ref={dropdownRef}
+            className={
+              filterTableToggle
+                ? "problems__menu-btn-bar"
+                : "problems__menu-btn-bar hide"
+            }
+          >
+            <div className="problems__menu-btn-bar__header">
+              <div className="problems__menu-btn-bar__title">Filter</div>
+              <div
+                onClick={() => setfilterTableToggle(0)}
+                className="problems__menu-btn-bar__btn-close"
+              >
+                <i class="fa-solid fa-circle-xmark"></i>
+              </div>
+            </div>
+            <div className="problems__menu-btn-bar__body">
+              <div className="problems__menu-btn-bar__solve-status-selector">
+                <div className="problems__menu-btn-bar__solve-status-selector-title">
+                  Solve Status
+                </div>
+                <div className="problems__menu-btn-bar__solve-status-selector-group">
+                  <div
+                    onClick={() => setFilterSolved(!filterSolved)}
+                    className={
+                      filterSolved
+                        ? "problems__menu-btn-bar__solve-status-selector-btn active"
+                        : "problems__menu-btn-bar__solve-status-selector-btn"
+                    }
+                  >
+                    SOLVED
+                  </div>
+                  <div
+                    onClick={() => setFilterAttemped(!filterAttemped)}
+                    className={
+                      filterAttemped
+                        ? "problems__menu-btn-bar__solve-status-selector-btn active"
+                        : "problems__menu-btn-bar__solve-status-selector-btn"
+                    }
+                  >
+                    ATTEMPED
+                  </div>
+                  <div
+                    onClick={() => setFilterUnsolved(!filterUnsolved)}
+                    className={
+                      filterUnsolved
+                        ? "problems__menu-btn-bar__solve-status-selector-btn active"
+                        : "problems__menu-btn-bar__solve-status-selector-btn"
+                    }
+                  >
+                    UNSOLVED
+                  </div>
+                </div>
+              </div>
+              <div className="problems__menu-btn-bar__range-filter">
+                <div className="problems__menu-btn-bar__range-filter-group">
+                  <div className="problems__menu-btn-bar__range-filter-btn">
+                    <span>Min Rating:</span>
+                    <input
+                      type="number"
+                      name="minRating"
+                      placeholder="min rating = 0"
+                      step="1"
+                      value={minRating}
+                      onChange={(e) =>
+                        handleChangeFilterMinRating(e.target.value)
+                      }
+                    />
+                  </div>
+                  <div className="problems__menu-btn-bar__range-filter-btn">
+                    <span>Max Rating:</span>
+                    <input
+                      type="number"
+                      name="maxRatign"
+                      placeholder="Max Rating = 4000"
+                      step="100"
+                      value={maxRating}
+                      onChange={(e) =>
+                        handleChangeFilterMaxRating(e.target.value)
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="problems__menu-btn-bar__range-filter-group">
+                  <div className="problems__menu-btn-bar__range-filter-btn">
+                    <span>Min ContestId:</span>
+                    <input
+                      type="number"
+                      name="minContestId"
+                      placeholder="Min ContestId = 1"
+                      step="1"
+                      value={minContestId}
+                      onChange={(e) =>
+                        handleChangeFilterMinContestId(e.target.value)
+                      }
+                    />
+                  </div>
+                  <div className="problems__menu-btn-bar__range-filter-btn">
+                    <span>Max ContestId:</span>
+                    <input
+                      type="number"
+                      name="maxContestId"
+                      placeholder="Max ContestId = 4000"
+                      step="1"
+                      value={maxContestId}
+                      onChange={(e) =>
+                        handleChangeFilterMaxContestId(e.target.value)
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="problems__menu-btn-bar__tag-selector">
+                <div className="problems__menu-btn-bar__tag-selector-title">
+                  Tags
+                </div>
+
+                <div className="problems__menu-btn-bar__tag-selector-multi-select">
+                  <select
+                    onChange={(e) => {
+                      const oldTagSelected = tagSelected;
+                      if (!oldTagSelected.includes(e.target.value))
+                        setTagSelected([...oldTagSelected, e.target.value]);
+                    }}
+                  >
+                    <option value="" disabled selected hidden>
+                      -- Select tag --
+                    </option>
+                    {listTag.map((value, index) => (
+                      <option value={value}>{value}</option>
+                    ))}
+                  </select>
+                  <i class="fa-solid fa-angle-down"></i>
+                </div>
+                <div className="problems__menu-btn-bar__tag-selector-selected">
+                  {tagSelected.map((value, index) => (
+                    <div
+                      onClick={() => {
+                        const newTags = tagSelected.filter(
+                          (tag) => tag !== value
+                        );
+                        setTagSelected(newTags);
+                      }}
+                      className="problems__menu-btn-bar__tag-selector-selected-item"
+                    >
+                      <span>{value}</span>
+                      <i class="fa-solid fa-xmark"></i>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div className="problems__table">
@@ -276,7 +594,16 @@ function Problems({ dataUser }) {
           {dataDisplay
             .slice((currentPage - 1) * limitPage, currentPage * limitPage)
             .map((value, index) => (
-              <div className="problems__table__content-container" key={index}>
+              <div
+                className={
+                  !value.verdict
+                    ? "problems__table__content-container"
+                    : value.verdict == "OK"
+                    ? "problems__table__content-container solved"
+                    : "problems__table__content-container attemped"
+                }
+                key={index}
+              >
                 <div className="problems__table__content-item width-8">
                   <div className="problems__table__content-item-text">
                     {(currentPage - 1) * limitPage + index + 1}
