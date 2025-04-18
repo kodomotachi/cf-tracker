@@ -17,9 +17,13 @@ function Contest({ codeforce, tachi, dataUser }) {
     "Global",
     "All",
   ]);
-  const [activeItems, setActiveItems] = useState(
-    Array(categoriesContest.length).fill(false) // Tạo mảng [false, false, ...]
-  );
+  const [filterDiv, setFilterDiv] = useState(() => {
+    const initialState = {};
+    categoriesContest.forEach((cat) => {
+      initialState[cat] = false;
+    });
+    return initialState;
+  });
 
   const [orderProblems, setOrderProblems] = useState([]);
   const [listTag, setListTag] = useState([]);
@@ -40,12 +44,6 @@ function Contest({ codeforce, tachi, dataUser }) {
   const dropdownRef = useRef(null);
 
   const [loading, setLoading] = useState(true);
-
-  const toggleItem = (index) => {
-    const updated = [...activeItems];
-    updated[index] = !updated[index]; // Đảo trạng thái on/off
-    setActiveItems(updated);
-  };
 
   useEffect(() => {
     fetch(codeforce + "/api/problemset.problems")
@@ -127,15 +125,65 @@ function Contest({ codeforce, tachi, dataUser }) {
 
     const mergedList = contests.map((contest) => {
       const contestId = String(contest.id);
+      const divMatches = contest.name.match(/Div\.?\s?[1-4]/g); // Giữ nguyên chữ
+      const isEdu = /Edu/i.test(contest.name);
+      const isGlobal = /Global/i.test(contest.name);
+
+      const divString = divMatches ? divMatches.join(" + ") : "";
+
+      let types = [];
+      if (isEdu) types.push("Educational");
+      if (isGlobal) types.push("Global");
+      if (divString) types.push(divString);
       return {
         ...contest,
+        div: types,
         problemList: problemMap.get(contestId) || [],
       };
     });
 
-    console.log(mergedList);
     setData(mergedList);
   }, [contests, problems]);
+
+  useEffect(() => {
+    const activeDivs = Object.keys(filterDiv).filter((key) => filterDiv[key]);
+    const newData = data.filter((contest) => {
+      return contest.div.some(
+        (value) => activeDivs.includes(value) && contest.problemList.length > 0
+      );
+    });
+
+    setDataDisplay(newData);
+    //  console.log(data);
+  }, [filterDiv]);
+
+  const toggleItem = (div) => {
+    if (div === "All") {
+      // Lấy danh sách các key trừ "All"
+      const allKeysExceptAll = Object.keys(filterDiv).filter(
+        (key) => key !== "All"
+      );
+
+      const allOn = !filterDiv["All"]; // Nếu đang tắt thì bật hết, đang bật thì tắt hết
+
+      const newFilter = {
+        All: allOn,
+      };
+
+      allKeysExceptAll.forEach((key) => {
+        newFilter[key] = allOn;
+      });
+
+      setFilterDiv(newFilter);
+    } else {
+      // Trường hợp toggle từng cái
+      setFilterDiv((prev) => ({
+        ...prev,
+        [div]: !prev[div],
+        All: false, // Bỏ check All khi có chỉnh tay từng cái
+      }));
+    }
+  };
 
   const handleChange = (selectedValues) => {
     setSearch(selectedValues);
@@ -154,11 +202,14 @@ function Contest({ codeforce, tachi, dataUser }) {
   useEffect(() => {
     const newData = data.filter((value) => value.problemList.length > 0);
     setDataDisplay(newData);
-    //  if (data.length > 0 && !perPage.includes(data.length)) {
-    //    setPerPage([10, 20, 50, 100, 200, data.length]);
+  }, [data]);
+
+  useEffect(() => {
+    //  if (dataDisplay.length > 0 && !perPage.includes(dataDisplay.length)) {
+    //    setPerPage([10, 20, 50, 100, 200, dataDisplay.length]);
     //  }
-    setMaxPage(Math.ceil(newData.length / limitPage));
-  }, [data, limitPage]);
+    setMaxPage(Math.ceil(dataDisplay.length / limitPage));
+  }, [dataDisplay, limitPage]);
 
   useEffect(() => {
     if (gotoPage != "") setCurrentPage(gotoPage);
@@ -389,11 +440,11 @@ function Contest({ codeforce, tachi, dataUser }) {
         {categoriesContest.map((value, index) => (
           <div
             className={
-              activeItems[index]
+              filterDiv[value]
                 ? "contest__category-tabs-item active"
                 : "contest__category-tabs-item"
             }
-            onClick={() => toggleItem(index)}
+            onClick={() => toggleItem(value)}
           >
             {value}
           </div>
@@ -452,7 +503,6 @@ function Contest({ codeforce, tachi, dataUser }) {
                 )}
               </div>
             ))}
-          {console.log(dataDisplay)}
         </div>
       </div>
       <div className="contests__page-bar">

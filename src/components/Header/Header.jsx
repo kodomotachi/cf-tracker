@@ -34,7 +34,7 @@ function Header({ codeforce, tachi, propHandleUser }) {
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter" && e.target.value != "") {
+    if (e.key === "Enter") {
       setHandleUser(e.target.value);
       setShowAlert(true);
       setSearch(e.target.value);
@@ -102,13 +102,16 @@ function Header({ codeforce, tachi, propHandleUser }) {
   };
 
   useEffect(() => {
-    if (handleUser == "") return;
+    localStorage.setItem("handleUser", handleUser);
+    if (handleUser == "") {
+      propHandleUser([]);
+      return;
+    }
     fetch(codeforce + "/api/user.status?handle=" + handleUser)
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "OK") {
           propHandleUser(data.result);
-          localStorage.setItem("handleUser", handleUser);
           setShowAlertSuccessfull(true);
           setRemainingTime3(1500);
           clearTimeout(timeoutRef3.current);
@@ -118,7 +121,7 @@ function Header({ codeforce, tachi, propHandleUser }) {
           setRemainingTime2(1500);
           clearTimeout(timeoutRef2.current);
           startTimers2();
-          setHandleUser("");
+          propHandleUser("error");
         }
       })
       .catch((error) => {
@@ -128,7 +131,6 @@ function Header({ codeforce, tachi, propHandleUser }) {
             console.log(data1);
             if (data1.status === "OK") {
               propHandleUser(data1.result);
-              localStorage.setItem("handleUser", handleUser);
               setShowAlertSuccessfull(true);
               setRemainingTime3(1500);
               clearTimeout(timeoutRef3.current);
@@ -138,7 +140,7 @@ function Header({ codeforce, tachi, propHandleUser }) {
               setRemainingTime2(1500);
               clearTimeout(timeoutRef2.current);
               startTimers2();
-              setHandleUser("");
+              propHandleUser("error");
             }
           })
           .catch((error) => {
@@ -213,7 +215,7 @@ function Header({ codeforce, tachi, propHandleUser }) {
               <div className="header__search-box-alert--failed-cnt">
                 <i className="fa-solid fa-circle-exclamation header__search-box-alert--failed-icon"></i>
                 <span>
-                  Failded To fetch Submissions for User wih handle: {search}
+                  Failded To fetch Submissions for User wih handle: {handleUser}
                 </span>
               </div>
               <i class="fa-solid fa-xmark"></i>
@@ -235,7 +237,8 @@ function Header({ codeforce, tachi, propHandleUser }) {
               <div className="header__search-box-alert--successful-cnt">
                 <i className="fa-solid fa-circle-check header__search-box-alert--successful-icon"></i>
                 <span>
-                  Successful To fetch Submissions for User wih handle: {search}
+                  Successful To fetch Submissions for User wih handle:{" "}
+                  {handleUser}
                 </span>
               </div>
               <i class="fa-solid fa-xmark"></i>

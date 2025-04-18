@@ -36,7 +36,14 @@ function Problems({ codeforce, tachi, dataUser }) {
   const [loading, setLoading] = useState(true);
   // handle with data User
   useEffect(() => {
-    if (dataUser.length == 0) return;
+    if (dataUser == "error") {
+      console.log("out");
+      return;
+    }
+    if (dataUser == "") {
+      setData(mergedProblems);
+      return;
+    }
     const verdictMap = {};
 
     dataUser.forEach((value) => {
