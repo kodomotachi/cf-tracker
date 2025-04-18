@@ -1,0 +1,300 @@
+.contests {
+  margin: 0 80px;
+}
+.contests__menu {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.contests__menu-search-box {
+  width: 50%;
+}
+.contests__menu-search-box-input {
+  height: 40px;
+  width: 100%;
+  font-size: 16px;
+  border: 1px solid var(--line-color);
+  border-radius: 5px;
+  padding: 0 16px;
+}
+.contests__menu-search-box-input::placeholder {
+  font-size: 16px;
+  font-weight: 500;
+}
+.contests__menu-search-box-input:focus {
+  outline: 3px solid var(--sub-color);
+}
+.contests__menu-display {
+  font-weight: 500;
+  color: var(--text-color);
+  opacity: 0.7;
+}
+
+.contests__btn-group {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0.7;
+}
+.contests__menu-btn {
+  font-size: 18px;
+  padding: 0 16px;
+  color: var(--text-color);
+  cursor: pointer;
+}
+
+.contests__menu-btn:hover .contests__menu-btn-icon {
+  color: var(--prime-color);
+}
+
+.contests__menu-btn-icon.active {
+  color: var(--prime-color);
+}
+
+.contest__category-tabs {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.contest__category-tabs-item {
+  padding: 12px 16px;
+  background-color: var(--disable-color);
+  cursor: pointer;
+  color: #fff;
+  font-weight: 500;
+  border-right: 1px solid var(--line-color);
+}
+
+.contest__category-tabs-item:first-child {
+  border-radius: 5px 0 0 5px;
+}
+
+.contest__category-tabs-item:last-child {
+  border-radius: 0 5px 5px 0;
+}
+
+.contest__category-tabs-item:hover {
+  opacity: 0.8;
+}
+
+.contest__category-tabs-item.active {
+  background-color: var(--prime-color);
+}
+
+.contests__table {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  overflow-x: scroll; /* hoặc scroll */
+}
+
+.contests__table__thread {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.contests__table__thread-item:first-child {
+  border-left: 1px solid var(--line-color);
+}
+
+.contests__table__thread-item {
+  height: 48px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--line-color);
+  border-right: 1px solid var(--line-color);
+  border-bottom: 1px solid var(--line-color);
+  font-weight: 600;
+}
+.contests__table__thread-item-text {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contests__table__thread-item-text:first-child {
+  text-align: center;
+}
+
+.contests__table__content {
+  width: 100%;
+  display: flex;
+  align-items: first baseline;
+  flex-direction: column;
+}
+
+.contests__table__content-container {
+  display: flex;
+}
+
+.contests__table__content-item {
+  max-width: 160px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 12px 24px;
+  border-right: 1px solid var(--line-color);
+  border-bottom: 1px solid var(--line-color);
+  line-height: 1.4;
+  font-size: 16px;
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.contests__table__content-item:first-child {
+  border-left: 1px solid var(--line-color);
+  justify-content: center;
+}
+
+.contests__table__content-item-text {
+  display: block;
+  width: 100%;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.contests__table__content-item-title {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.contests__page-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 12px;
+}
+
+.contests__page-bar-container {
+  display: flex;
+  border-radius: 5px;
+  border-bottom: solid 1px var(--line-color);
+  border-right: solid 1px var(--line-color);
+}
+
+.contests__page-bar-item--arrow:first-child {
+  border-radius: 5px 0 0 5px;
+}
+
+.contests__page-bar-item--arrow:last-child {
+  border-radius: 0px 5px 5px 0;
+}
+
+.contests__page-bar-item--arrow:hover {
+  color: var(--highlight-color);
+  background-color: var(--prime-color);
+  border: solid 1px var(--prime-color) !important;
+}
+
+.contests__page-bar-item {
+  padding: 8px 16px;
+  line-height: 1.4;
+  border-top: solid 1px var(--line-color);
+  border-left: solid 1px var(--line-color);
+  cursor: pointer;
+  color: var(--text-color);
+  font-size: 16px;
+  display: flex;
+  justify-content: space-between;
+  /* align-items: center; */
+}
+
+.contests__page-bar-item--info {
+  border: none;
+  cursor: default;
+}
+.contests__page-bar-item--per-page,
+.contests__page-bar-item--goto {
+  padding: 0;
+  margin-right: 16px;
+  border-radius: 5px;
+}
+
+.contests__page-bar-item--goto span,
+.contests__page-bar-item--goto input {
+  padding: 8px;
+  border-right: solid 1px var(--line-color);
+  border-bottom: solid 1px var(--line-color);
+}
+.contests__page-bar-item--per-page span,
+.contests__page-bar-item--goto span {
+  border-radius: 5px 0 0 5px;
+  font-weight: 500;
+  cursor: default;
+}
+
+.contests__page-bar-item--goto input {
+  padding-left: 12px;
+  border-radius: 0 5px 5px 0;
+  width: 100px;
+  min-width: 100px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.contests__page-bar-item--goto input {
+  cursor: text;
+}
+
+.contests__page-bar-item--goto input:focus {
+  outline: 3px solid var(--prime-color);
+}
+
+.contests__page-bar-item--per-page {
+  border-right: solid 1px var(--line-color);
+  border-bottom: solid 1px var(--line-color);
+}
+
+.contests__page-bar-item--per-page select {
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  padding-left: 12px;
+  border-radius: 0 5px 5px 0;
+  width: 80px;
+  min-width: 50px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.contests__page-bar-item--per-page span {
+  border-right: solid 1px var(--line-color);
+}
+
+.contests__page-bar-item--per-page span,
+.contests__page-bar-item--per-page select {
+  padding: 8px;
+}
+.contests__page-bar-item--per-page select:focus {
+  outline: none;
+}
+
+.contests__page-bar-item--per-page-container {
+  position: relative;
+}
+
+.contests__page-bar-item--per-page-container:hover {
+  outline: 3px solid var(--prime-color);
+  border-radius: 0 5px 5px 0;
+}
+
+.contests__page-bar-item--per-page-container:hover i {
+  color: var(--prime-color);
+}
+
+.contests__page-bar-item--per-page i {
+  margin-right: 8px;
+  pointer-events: none;
+  position: absolute;
+  bottom: 10px;
+  right: 0px;
+}

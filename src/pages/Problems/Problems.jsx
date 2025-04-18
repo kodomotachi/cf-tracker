@@ -34,9 +34,9 @@ function Problems({ codeforce, tachi, dataUser }) {
   const dropdownRef = useRef(null);
 
   const [loading, setLoading] = useState(true);
-
+  // handle with data User
   useEffect(() => {
-    if (dataUser == "") return;
+    if (dataUser.length == 0) return;
     const verdictMap = {};
 
     dataUser.forEach((value) => {
@@ -93,7 +93,7 @@ function Problems({ codeforce, tachi, dataUser }) {
           name: problem.name,
           points: problem.points,
           rating: problem.rating,
-          tag: problem.tags,
+          tags: problem.tags,
           solvedCount: problem.solvedCount,
           verdict: verdictMap[key] || null,
         };
@@ -111,6 +111,7 @@ function Problems({ codeforce, tachi, dataUser }) {
     maxRating,
     minContestId,
     maxContestId,
+    mergedProblems,
   ]);
 
   useEffect(() => {
@@ -126,7 +127,23 @@ function Problems({ codeforce, tachi, dataUser }) {
           });
           setListTag([...tagSet]);
         } else {
-          console.error("Lỗi khi lấy dữ liệu:", res);
+          fetch(tachi + "/api/problemset.problems")
+            .then((res1) => res1.json())
+            .then((res1) => {
+              if (res1.status === "OK") {
+                setProblems(res1.result.problems);
+                setProblemsStatistics(res1.result.problemStatistics);
+                const tagSet = new Set();
+                res1.result.problems.forEach((problem) => {
+                  problem.tags.forEach((tag) => tagSet.add(tag));
+                });
+                setListTag([...tagSet]);
+              } else {
+                console.error("Lỗi khi lấy dữ liệu:", res1);
+              }
+            })
+            .catch((error) => console.error("Lỗi kết nối API:", error))
+            .finally(() => setLoading(false));
         }
       })
       .catch((error) => console.error("Lỗi kết nối API:", error))
@@ -253,6 +270,7 @@ function Problems({ codeforce, tachi, dataUser }) {
   }, [gotoPage]);
 
   const handleRandomShuffle = () => {
+    if (data.length < 1) return;
     const randomIndex = Math.floor(Math.random() * data.length);
     const randomItem = data[randomIndex];
     setSearch("");
@@ -309,6 +327,7 @@ function Problems({ codeforce, tachi, dataUser }) {
 
     setMinContestId(pageCurrent);
   };
+
   const handleChangeFilterMaxContestId = (value) => {
     if (value === "") {
       handleChangeFilterMaxContestId("");
@@ -621,6 +640,7 @@ function Problems({ codeforce, tachi, dataUser }) {
                     target="_blank"
                     rel="noopener noreferrer"
                     className="problems__table__content-item-text cursor-pointer"
+                    title={`${value.tags}`}
                   >
                     {value.name}
                   </a>
@@ -639,41 +659,41 @@ function Problems({ codeforce, tachi, dataUser }) {
             ))}
         </div>
       </div>
-      <div className="problems__table-page-bar">
-        <div className="problems__table-page-bar-container">
+      <div className="problems__page-bar">
+        <div className="problems__page-bar-container">
           <div
             onClick={() => handleChangePage(minPage)}
-            className="problems__table-page-bar-item problems__table-page-bar-item--arrow"
+            className="problems__page-bar-item problems__page-bar-item--arrow"
           >
             <i class="fa-solid fa-angles-left"></i>
           </div>
           <div
             onClick={() => handleChangePage(currentPage - 1)}
-            className="problems__table-page-bar-item problems__table-page-bar-item--arrow"
+            className="problems__page-bar-item problems__page-bar-item--arrow"
           >
             <i class="fa-solid fa-angle-left"></i>
           </div>
           <div
             onClick={() => handleChangePage(currentPage + 1)}
-            className="problems__table-page-bar-item problems__table-page-bar-item--arrow"
+            className="problems__page-bar-item problems__page-bar-item--arrow"
           >
             <i class="fa-solid fa-angle-right"></i>
           </div>
           <div
             onClick={() => handleChangePage(maxPage)}
-            className="problems__table-page-bar-item problems__table-page-bar-item--arrow"
+            className="problems__page-bar-item problems__page-bar-item--arrow"
           >
             <i class="fa-solid fa-angles-right"></i>
           </div>
         </div>
 
-        <div className="problems__table-page-bar-item problems__table-page-bar-item--info">
+        <div className="problems__page-bar-item problems__page-bar-item--info">
           <span>
             {" "}
             Page {currentPage} of {maxPage}
           </span>
         </div>
-        <div className="problems__table-page-bar-item problems__table-page-bar-item--goto">
+        <div className="problems__page-bar-item problems__page-bar-item--goto">
           <span>Go to page:</span>
           <input
             type="number"
@@ -684,9 +704,9 @@ function Problems({ codeforce, tachi, dataUser }) {
             onChange={(e) => handleChangePage(e.target.value)}
           />
         </div>
-        <div className="problems__table-page-bar-item problems__table-page-bar-item--per-page">
+        <div className="problems__page-bar-item problems__page-bar-item--per-page">
           <span>Per Page:</span>
-          <div className="problems__table-page-bar-item--per-page-container">
+          <div className="problems__page-bar-item--per-page-container">
             <select
               onChange={(e) => {
                 setLimitPage(e.target.value);

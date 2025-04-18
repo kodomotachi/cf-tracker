@@ -8,6 +8,7 @@ import {
 
 import "./App.css";
 import Problems from "./pages/Problems";
+import Contests from "./pages/Contests";
 import Header from "./components/Header";
 
 const App = () => {
@@ -34,6 +35,17 @@ const App = () => {
             exact
             element={
               <Problems
+                codeforce={codeforce}
+                tachi={tachi}
+                dataUser={dataUser}
+              />
+            }
+          />
+          <Route
+            path="/contests"
+            exact
+            element={
+              <Contests
                 codeforce={codeforce}
                 tachi={tachi}
                 dataUser={dataUser}

@@ -4,8 +4,12 @@ import { Link } from "react-router-dom";
 import logo from "../../img/cftracker_logo.png";
 
 function Header({ codeforce, tachi, propHandleUser }) {
-  const [handleUser, setHandleUser] = useState("");
-  const [search, setSearch] = useState("");
+  const [handleUser, setHandleUser] = useState(() => {
+    return localStorage.getItem("handleUser") || "";
+  });
+  const [search, setSearch] = useState(() => {
+    return localStorage.getItem("handleUser") || "";
+  });
 
   const [showAlert, setShowAlert] = useState(false);
   const [showAlertFailed, setShowAlertFailed] = useState(false);
@@ -25,15 +29,12 @@ function Header({ codeforce, tachi, propHandleUser }) {
 
   const [loading, setLoading] = useState(true);
 
-  const startTimers = () => {
-    startTimeRef.current = Date.now();
-    timeoutRef.current = setTimeout(() => {
-      setShowAlert(false);
-    }, remainingTime);
+  const handeChange = (e) => {
+    setSearch(e.target.value);
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && e.target.value != "") {
       setHandleUser(e.target.value);
       setShowAlert(true);
       setSearch(e.target.value);
@@ -41,6 +42,13 @@ function Header({ codeforce, tachi, propHandleUser }) {
     setRemainingTime(1500);
     clearTimeout(timeoutRef.current);
     startTimers();
+  };
+
+  const startTimers = () => {
+    startTimeRef.current = Date.now();
+    timeoutRef.current = setTimeout(() => {
+      setShowAlert(false);
+    }, remainingTime);
   };
 
   const handleMouseEnter = () => {
@@ -100,6 +108,7 @@ function Header({ codeforce, tachi, propHandleUser }) {
       .then((data) => {
         if (data.status === "OK") {
           propHandleUser(data.result);
+          localStorage.setItem("handleUser", handleUser);
           setShowAlertSuccessfull(true);
           setRemainingTime3(1500);
           clearTimeout(timeoutRef3.current);
@@ -112,7 +121,36 @@ function Header({ codeforce, tachi, propHandleUser }) {
           setHandleUser("");
         }
       })
-      .catch((error) => console.error("Lỗi kết nối API:", error))
+      .catch((error) => {
+        fetch(tachi + "/api/user.status?handle=" + handleUser)
+          .then((res) => res.json())
+          .then((data1) => {
+            console.log(data1);
+            if (data1.status === "OK") {
+              propHandleUser(data1.result);
+              localStorage.setItem("handleUser", handleUser);
+              setShowAlertSuccessfull(true);
+              setRemainingTime3(1500);
+              clearTimeout(timeoutRef3.current);
+              startTimers3();
+            } else {
+              setShowAlertFailed(true);
+              setRemainingTime2(1500);
+              clearTimeout(timeoutRef2.current);
+              startTimers2();
+              setHandleUser("");
+            }
+          })
+          .catch((error) => {
+            console.error("Lỗi kết nối API:", error);
+            setShowAlertFailed(true);
+            setRemainingTime2(1500);
+            clearTimeout(timeoutRef2.current);
+            startTimers2();
+            setHandleUser("");
+          })
+          .finally(() => setLoading(false));
+      })
       .finally(() => setLoading(false));
   }, [handleUser]);
 
@@ -131,13 +169,15 @@ function Header({ codeforce, tachi, propHandleUser }) {
             <Link to="/problems" className="header__menu-nav-item">
               Problems
             </Link>
-            <Link to="/contents" className="header__menu-nav-item">
-              Contents
+            <Link to="/contests" className="header__menu-nav-item">
+              Contests
             </Link>
           </div>
           <div className="header__search-box">
             <input
               type="text"
+              value={search}
+              onChange={handeChange}
               onKeyDown={handleKeyDown}
               placeholder="handle1, handle2, .."
               className="header__search-box-input"
