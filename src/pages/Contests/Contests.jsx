@@ -447,6 +447,9 @@ function Contest({ codeforce, tachi, dataUser }) {
   const handleRefresh = () => {
     setSearch("");
     setDataDisplay(data);
+    setFilterSolved(0);
+    setFilterAttemped(0);
+    setUnSolved(1);
   };
 
   const handleChangePage = (value) => {
