@@ -685,61 +685,78 @@ function Contest({ codeforce, tachi, dataUser }) {
                   </a>
                 </div>
 
-                {Array.from({ length: orderProblems.length }).map(
-                  (_, index) => {
-                    const problem = value.problemList[index] || "";
-                    const firstText = problem == "" ? "" : problem.index;
+                {orderProblems.map((letter) => {
+                  const grouped = value.problemList.filter(
+                    (problem) => problem.index[0] === letter
+                  );
 
-                    const LastText = problem == "" ? "" : ". " + problem.name;
-                    const ratingColor = problem.rating
-                      ? getRatingColor(problem.rating)
-                      : "gray";
-                    const subRatingColor = problem.rating
-                      ? getSubRatingColor(problem.rating)
-                      : "gray";
-                    return (
-                      <div
-                        title={`${problem.name}`}
-                        className={
-                          !problem.verdict
-                            ? "contests__table__content-item min-width-160"
-                            : problem.verdict == "OK"
-                            ? "contests__table__content-item min-width-160 solved"
-                            : "contests__table__content-item min-width-160 attemped"
-                        }
-                        style={{
-                          color: viewSelect["Color"] ? ratingColor : "inherit",
-                        }}
-                      >
-                        <a
-                          href={`https://codeforces.com/problemset/problem/${problem.contestId}/${problem.index}`}
-                          target="_blank"
-                          className="contests__table__content-item-text"
-                        >
-                          <span
-                            style={{
-                              color: viewSelect["Color"]
-                                ? subRatingColor
-                                : "inherit",
-                            }}
-                          >
-                            {firstText}
-                          </span>{" "}
-                          {LastText}
-                        </a>
-                        <div
-                          className={
-                            viewSelect["Rating"]
-                              ? "contests__table__content-item-rating active"
-                              : "contests__table__content-item-rating"
-                          }
-                        >
-                          ({problem.rating ? problem.rating : "N/A"})
-                        </div>
-                      </div>
-                    );
-                  }
-                )}
+                  return (
+                    <div
+                      key={letter}
+                      className="contests__table__content-item-group min-width-160"
+                    >
+                      {grouped.length === 0 ? (
+                        <div className="contests__table__content-item min-width-160 empty-cell"></div>
+                      ) : (
+                        grouped.map((problem) => {
+                          const firstText = problem.index;
+                          const LastText = ". " + problem.name;
+                          const ratingColor = problem.rating
+                            ? getRatingColor(problem.rating)
+                            : "gray";
+                          const subRatingColor = problem.rating
+                            ? getSubRatingColor(problem.rating)
+                            : "gray";
+
+                          return (
+                            <div
+                              key={problem.index}
+                              title={problem.name}
+                              className={
+                                !problem.verdict
+                                  ? "contests__table__content-item min-width-160"
+                                  : problem.verdict === "OK"
+                                  ? "contests__table__content-item min-width-160 solved"
+                                  : "contests__table__content-item min-width-160 attemped"
+                              }
+                              style={{
+                                color: viewSelect["Color"]
+                                  ? ratingColor
+                                  : "inherit",
+                              }}
+                            >
+                              <a
+                                href={`https://codeforces.com/problemset/problem/${problem.contestId}/${problem.index}`}
+                                target="_blank"
+                                className="contests__table__content-item-text"
+                              >
+                                <span
+                                  style={{
+                                    color: viewSelect["Color"]
+                                      ? subRatingColor
+                                      : "inherit",
+                                  }}
+                                >
+                                  {firstText}
+                                </span>
+                                {LastText}
+                                <div
+                                  className={
+                                    viewSelect["Rating"]
+                                      ? "contests__table__content-item-rating active"
+                                      : "contests__table__content-item-rating"
+                                  }
+                                >
+                                  ({problem.rating ? problem.rating : "N/A"})
+                                </div>
+                              </a>
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             ))}
         </div>

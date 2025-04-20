@@ -268,9 +268,6 @@
   display: flex;
   justify-content: flex-start;
   align-items: center;
-}
-
-.contests__table__thread-item:first-child {
   border-left: 1px solid var(--line-color);
 }
 
@@ -296,10 +293,16 @@
   display: flex;
   align-items: first baseline;
   flex-direction: column;
+  border-left: 1px solid var(--line-color);
 }
 
 .contests__table__content-container {
   display: flex;
+}
+
+.contests__table__content-item-group {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .contests__table__content-item {
@@ -325,7 +328,6 @@
 }
 
 .contests__table__content-item:first-child {
-  border-left: 1px solid var(--line-color);
   justify-content: center;
 }
 
