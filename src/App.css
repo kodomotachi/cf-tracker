@@ -26,15 +26,15 @@ body {
   flex: 0 0 64px;
 }
 
-.min-width-100 {
-  min-width: 100px;
-  flex: 0 0 100px;
-}
-
 .min-width-160 {
   min-width: 160px;
   flex: 0 0 160px;
 }
+.min-width-200 {
+  min-width: 200px;
+  flex: 0 0 200px;
+}
+
 .min-width-280 {
   min-width: 280px;
   flex: 0 0 280px;

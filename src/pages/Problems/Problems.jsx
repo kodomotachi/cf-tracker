@@ -37,7 +37,6 @@ function Problems({ codeforce, tachi, dataUser }) {
   // handle with data User
   useEffect(() => {
     if (dataUser == "error") {
-      console.log("out");
       return;
     }
     if (dataUser == "") {
@@ -616,7 +615,6 @@ function Problems({ codeforce, tachi, dataUser }) {
           </div>
         </div>
         <div className="problems__table__content">
-          {/* https://codeforces.com/problemset/problem/2092/D */}
           {dataDisplay
             .slice((currentPage - 1) * limitPage, currentPage * limitPage)
             .map((value, index) => (
@@ -654,12 +652,12 @@ function Problems({ codeforce, tachi, dataUser }) {
                 </div>
                 <div className="problems__table__content-item width-16">
                   <div className="problems__table__content-item-text">
-                    {value.rating ? value.rating : "-"}
+                    {value.rating ? value.rating : "N/A"}
                   </div>
                 </div>
                 <div className="problems__table__content-item width-20">
                   <div className="problems__table__content-item-text">
-                    {value.solvedCount ? value.solvedCount : "-"}
+                    {value.solvedCount ? value.solvedCount : "N/A"}
                   </div>
                 </div>
               </div>

@@ -23,36 +23,36 @@
   /* Rating Color */
   /*sub-color for first character */
 
-  --rating-color-sub-1: gray;
+  --sub-rating-color-1: gray;
   --rating-color-1: gray;
 
-  --rating-color-sub-2: rgb(136, 204, 34);
+  --sub-rating-color-2: rgb(136, 204, 34);
   --rating-color-2: rgb(136, 204, 34);
 
-  --rating-color-sub-3: green;
+  --sub-rating-color-3: green;
   --rating-color-3: green;
 
-  --rating-color-sub-4: rgb(3, 168, 158);
+  --sub-rating-color-4: rgb(3, 168, 158);
   --rating-color-4: rgb(3, 168, 158);
 
-  --rating-color-sub-5: blue;
+  --sub-rating-color-5: blue;
   --rating-color-5: blue;
 
-  --rating-color-sub-6: rgb(170, 0, 170);
+  --sub-rating-color-6: rgb(170, 0, 170);
   --rating-color-6: rgb(170, 0, 170);
 
-  --rating-color-sub-7: rgb(255, 140, 0);
+  --sub-rating-color-7: rgb(255, 140, 0);
   --rating-color-7: rgb(255, 140, 0);
 
-  --rating-color-sub-8: red;
+  --sub-rating-color-8: rgb(255, 140, 0);
   --rating-color-8: rgb(255, 140, 0);
 
-  --rating-color-sub-9: red;
+  --sub-rating-color-9: red;
   --rating-color-9: red;
 
-  --rating-color-sub-10: rgb(255, 0, 255);
+  --sub-rating-color-10: red;
   --rating-color-10: red;
 
-  --rating-color-sub-11: black;
+  --sub-rating-color-11: black;
   --rating-color-11: red;
 }

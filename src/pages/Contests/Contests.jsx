@@ -4,8 +4,9 @@ import Problems from "../Problems";
 
 function Contest({ codeforce, tachi, dataUser }) {
   const [problems, setProblems] = useState([]);
-  const [mergedProblems, setMergedProblems] = useState([]);
+  const [userProblems, setUserProblems] = useState([]);
   const [contests, setContests] = useState([]);
+  const [oldData, setOldData] = useState([]);
   const [data, setData] = useState([]);
   const [categoriesContest, setCategoriesContest] = useState([
     "Div. 1",
@@ -15,15 +16,34 @@ function Contest({ codeforce, tachi, dataUser }) {
     "Educational",
     "Div. 1 + Div. 2",
     "Global",
+    "Other",
     "All",
   ]);
+  const [viewSettings, setViewSettings] = useState([
+    "Date",
+    "Rating",
+    "Color",
+    "Short Name",
+  ]);
+
   const [filterDiv, setFilterDiv] = useState(() => {
     const initialState = {};
     categoriesContest.forEach((cat) => {
+      initialState[cat] = true;
+    });
+    return initialState;
+  });
+  const [viewSelect, setViewSelect] = useState(() => {
+    const initialState = {};
+    viewSettings.forEach((cat) => {
       initialState[cat] = false;
     });
     return initialState;
   });
+
+  const [filterSolved, setFilterSolved] = useState(1);
+  const [filterAttemped, setFilterAttemped] = useState(0);
+  const [filterUnsolved, setFilterUnsolved] = useState(0);
 
   const [orderProblems, setOrderProblems] = useState([]);
   const [listTag, setListTag] = useState([]);
@@ -104,60 +124,193 @@ function Contest({ codeforce, tachi, dataUser }) {
   }, []);
 
   useEffect(() => {
-    const problemMap = new Map();
     const order = new Set();
-    // Đảm bảo KEY là cùng kiểu (ví dụ dùng String)
-    for (const problem of problems) {
-      const contestId = String(problem.contestId);
-      if (!problemMap.has(contestId)) {
-        problemMap.set(contestId, []);
-      }
-      problemMap.get(contestId).push(problem);
-      if (problem.index[0] >= "A" && problem.index[0] <= "Z")
-        order.add(problem.index[0]);
-    }
+    dataDisplay
+      .slice((currentPage - 1) * limitPage, currentPage * limitPage)
+      .map((contest, index) => {
+        contest.problemList.map((problem) => {
+          if (problem.index[0] >= "A" && problem.index[0] <= "Z") {
+            const group = problem.index[0];
+            if (group >= "A" && group <= "Z") order.add(group);
+          }
+        });
+      });
 
     setOrderProblems(
       Array.from(order).sort((a, b) => {
         return a.localeCompare(b);
       })
     );
+  }, [dataDisplay, currentPage, limitPage]);
+
+  useEffect(() => {
+    var currentproblems = problems;
+    if (userProblems.length > 0) currentproblems = userProblems;
+    const problemMap = new Map();
+
+    // Đảm bảo KEY là cùng kiểu (ví dụ dùng String)
+    for (const problem of currentproblems) {
+      const contestId = String(problem.contestId);
+      if (!problemMap.has(contestId)) {
+        problemMap.set(contestId, []);
+      }
+
+      problemMap.get(contestId).push(problem);
+    }
 
     const mergedList = contests.map((contest) => {
       const contestId = String(contest.id);
       const divMatches = contest.name.match(/Div\.?\s?[1-4]/g); // Giữ nguyên chữ
       const isEdu = /Edu/i.test(contest.name);
       const isGlobal = /Global/i.test(contest.name);
+      const isCodeForces = /Codeforces/i.test(contest.name);
+      const fullRound = contest.name.match(/Round (\d+)/);
+      const round = fullRound != null ? fullRound[1] : "";
+      let shortName = "";
 
-      const divString = divMatches ? divMatches.join(" + ") : "";
+      const cleanedDivs = divMatches?.map((div) =>
+        div
+          .replace(/Div[\.\s]?1/i, "Div. 1")
+          .replace(/Div[\.\s]?2/i, "Div. 2")
+          .replace(/Div[\.\s]?3/i, "Div. 3")
+          .replace(/Div[\.\s]?4/i, "Div. 4")
+      );
+      const uniqueDivs = [...new Set(cleanedDivs)];
+      const divString = uniqueDivs ? uniqueDivs.join(" + ") : "";
+
+      if (isEdu) {
+        shortName = "Edu " + round;
+      } else if (isGlobal) {
+        shortName = "Global " + round;
+      } else if (isCodeForces) {
+        shortName = "CF " + round;
+      }
 
       let types = [];
       if (isEdu) types.push("Educational");
       if (isGlobal) types.push("Global");
       if (divString) types.push(divString);
+
+      if (!isEdu && !isGlobal && !divString) types.push("Other");
+      let unix_timestamp = contest.startTimeSeconds;
+
+      // Create a new JavaScript Date object based on the timestamp
+      // multiplied by 1000 so that the argument is in milliseconds, not seconds
+      var date = new Date(unix_timestamp * 1000);
+      var year = date.getFullYear();
+      var month = date.getMonth() + 1;
+      var day = date.getDate();
+
+      var hours = date.getHours();
+      var minutes = "0" + date.getMinutes();
+      var seconds = "0" + date.getSeconds();
+
+      var formattedTime =
+        day +
+        "/" +
+        month +
+        "/" +
+        year +
+        "\t" +
+        hours +
+        ":" +
+        minutes.substr(-2);
+
       return {
         ...contest,
         div: types,
-        problemList: problemMap.get(contestId) || [],
+        problemList: (problemMap.get(contestId) || []).sort((a, b) =>
+          a.index.localeCompare(b.index)
+        ),
+        shortName: shortName,
+        formattedTime: formattedTime,
       };
     });
 
-    setData(mergedList);
-  }, [contests, problems]);
+    const newData = mergedList.filter((value) => value.problemList.length > 0);
+    const newData2 = newData.filter((contest) => {
+      return contest.problemList.some((problem) => {
+        const verdict = problem.verdict || null;
+
+        const isSolved = verdict === "OK";
+        const isAttempted = verdict && verdict !== "OK";
+        const isUnsolved = !verdict;
+
+        return (
+          (filterSolved && isSolved) ||
+          (filterAttemped && isAttempted) ||
+          (filterUnsolved && isUnsolved)
+        );
+      });
+    });
+    setData(newData);
+    setDataDisplay(newData2);
+    setOldData(newData);
+  }, [contests, problems, userProblems]);
 
   useEffect(() => {
-    const activeDivs = Object.keys(filterDiv).filter((key) => filterDiv[key]);
-    const newData = data.filter((contest) => {
-      return contest.div.some(
-        (value) => activeDivs.includes(value) && contest.problemList.length > 0
-      );
+    if (dataUser == "error") {
+      return;
+    }
+    if (dataUser == "") {
+      setData(oldData);
+      setDataDisplay(oldData);
+      return;
+    }
+    const verdictMap = {};
+
+    dataUser.forEach((value) => {
+      const key = `${value.problem.contestId}-${value.problem.index}`;
+      // Chỉ lấy verdict OK ưu tiên nhất, nếu không thì verdict khác
+      if (!verdictMap[key] || value.verdict === "OK") {
+        verdictMap[key] = value.verdict;
+      }
     });
 
-    setDataDisplay(newData);
-    //  console.log(data);
-  }, [filterDiv]);
+    const result = problems.map((problem) => {
+      const key = `${problem.contestId}-${problem.index}`;
+      return {
+        contestId: problem.contestId,
+        index: problem.index,
+        name: problem.name,
+        points: problem.points,
+        rating: problem.rating,
+        tags: problem.tags,
+        solvedCount: problem.solvedCount,
+        verdict: verdictMap[key] || null,
+      };
+    });
 
-  const toggleItem = (div) => {
+    setUserProblems(result);
+  }, [dataUser]);
+
+  useEffect(() => {
+    const newData = data.filter((contest) => {
+      return contest.problemList.some((problem) => {
+        const verdict = problem.verdict || null;
+
+        const isSolved = verdict === "OK";
+        const isAttempted = verdict && verdict !== "OK";
+        const isUnsolved = !verdict;
+
+        return (
+          (filterSolved && isSolved) ||
+          (filterAttemped && isAttempted) ||
+          (filterUnsolved && isUnsolved)
+        );
+      });
+    });
+
+    const activeDivs = Object.keys(filterDiv).filter((key) => filterDiv[key]);
+    const newData2 = newData.filter((contest) => {
+      return contest.div.some((value) => activeDivs.includes(value));
+    });
+
+    setDataDisplay(newData2);
+    setGotoPage(1);
+  }, [filterDiv, filterSolved, filterAttemped, filterUnsolved]);
+
+  const toggleItemDiv = (div) => {
     if (div === "All") {
       // Lấy danh sách các key trừ "All"
       const allKeysExceptAll = Object.keys(filterDiv).filter(
@@ -177,32 +330,100 @@ function Contest({ codeforce, tachi, dataUser }) {
       setFilterDiv(newFilter);
     } else {
       // Trường hợp toggle từng cái
-      setFilterDiv((prev) => ({
-        ...prev,
-        [div]: !prev[div],
-        All: false, // Bỏ check All khi có chỉnh tay từng cái
-      }));
+      setFilterDiv((prev) => {
+        const newValue = !prev[div];
+        const newFilter = {
+          ...prev,
+          [div]: newValue,
+          All: false, // Mặc định tắt "All" khi toggle riêng
+        };
+
+        // Kiểm tra nếu tất cả key (trừ "All") đều true sau toggle thì bật "All"
+        const allKeysExceptAll = Object.keys(newFilter).filter(
+          (key) => key !== "All"
+        );
+        const allAreOn = allKeysExceptAll.every((key) => newFilter[key]);
+
+        if (allAreOn) {
+          newFilter.All = true;
+        }
+
+        return newFilter;
+      });
     }
+  };
+  const toggleItemViewSetting = (value) => {
+    setViewSelect((prev) => ({
+      ...prev,
+      [value]: !prev[value],
+    }));
   };
 
   const handleChange = (selectedValues) => {
     setSearch(selectedValues);
 
     const results = data.filter(
-      (value) =>
-        String(value.contestId + value.index) // Đảm bảo contestId là chuỗi
+      (contest) =>
+        String(contest.id) // Đảm bảo contestId là chuỗi
           .toLowerCase()
           .startsWith(selectedValues.toLowerCase()) ||
-        value.name.toLowerCase().includes(selectedValues.toLowerCase()) // Kiểm tra đúng tên thuộc tính
+        contest.name.toLowerCase().includes(selectedValues.toLowerCase()) // Kiểm tra đúng tên thuộc tính
     );
 
     setDataDisplay(results);
+    setGotoPage(1);
   };
 
-  useEffect(() => {
-    const newData = data.filter((value) => value.problemList.length > 0);
-    setDataDisplay(newData);
-  }, [data]);
+  const getRatingColor = (rating) => {
+    if (rating <= 1200) {
+      return "var(--rating-color-1)";
+    } else if (rating <= 1400) {
+      return "var(--rating-color-2)";
+    } else if (rating <= 1600) {
+      return "var(--rating-color-3)";
+    } else if (rating <= 1800) {
+      return "var(--rating-color-4)";
+    } else if (rating <= 2000) {
+      return "var(--rating-color-5)";
+    } else if (rating <= 2200) {
+      return "var(--rating-color-6)";
+    } else if (rating <= 2400) {
+      return "var(--rating-color-7)";
+    } else if (rating <= 2600) {
+      return "var(--rating-color-8)";
+    } else if (rating <= 2800) {
+      return "var(--rating-color-9)";
+    } else if (rating <= 3000) {
+      return "var(--rating-color-10)";
+    } else {
+      return "var(--rating-color-11)";
+    }
+  };
+  const getSubRatingColor = (rating) => {
+    if (rating <= 1200) {
+      return "var(--sub-rating-color-1)";
+    } else if (rating <= 1400) {
+      return "var(--sub-rating-color-2)";
+    } else if (rating <= 1600) {
+      return "var(--sub-rating-color-3)";
+    } else if (rating <= 1800) {
+      return "var(--sub-rating-color-4)";
+    } else if (rating <= 2000) {
+      return "var(--sub-rating-color-5)";
+    } else if (rating <= 2200) {
+      return "var(--sub-rating-color-6)";
+    } else if (rating <= 2400) {
+      return "var(--sub-rating-color-7)";
+    } else if (rating <= 2600) {
+      return "var(--sub-rating-color-8)";
+    } else if (rating <= 2800) {
+      return "var(--sub-rating-color-9)";
+    } else if (rating <= 3000) {
+      return "var(--sub-rating-color-10)";
+    } else {
+      return "var(--sub-rating-color-11)";
+    }
+  };
 
   useEffect(() => {
     //  if (dataDisplay.length > 0 && !perPage.includes(dataDisplay.length)) {
@@ -225,8 +446,7 @@ function Contest({ codeforce, tachi, dataUser }) {
 
   const handleRefresh = () => {
     setSearch("");
-    const newData = data.filter((value) => value.problemList.length > 0);
-    setDataDisplay(newData);
+    setDataDisplay(data);
   };
 
   const handleChangePage = (value) => {
@@ -241,6 +461,19 @@ function Contest({ codeforce, tachi, dataUser }) {
 
     setGotoPage(pageCurrent);
   };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setfilterTableToggle(0);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className="contests">
@@ -279,7 +512,7 @@ function Contest({ codeforce, tachi, dataUser }) {
                 : "fa-solid fa-filter contests__menu-btn-icon"
             }
           ></i>
-          {/* <div
+          <div
             onClick={(e) => e.stopPropagation()}
             ref={dropdownRef}
             className={
@@ -298,6 +531,30 @@ function Contest({ codeforce, tachi, dataUser }) {
               </div>
             </div>
             <div className="contests__menu-btn-bar__body">
+              <div className="contests__menu-btn-bar__view-settings">
+                <div className="contests__menu-btn-bar__view-settings-title">
+                  View Settings
+                </div>
+                <div className="contests__menu-btn-bar__view-settings-container">
+                  {viewSettings.map((value) => (
+                    <div
+                      onClick={() => toggleItemViewSetting(value)}
+                      className={
+                        viewSelect[value]
+                          ? "contests__menu-btn-bar__view-settings-item active"
+                          : "contests__menu-btn-bar__view-settings-item"
+                      }
+                    >
+                      <div className="contests__menu-btn-bar__view-settings-item-text">
+                        {value}
+                      </div>
+                      <div className="contests__menu-btn-bar__view-settings-item-btn">
+                        <i class="fa-solid fa-check"></i>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
               <div className="contests__menu-btn-bar__solve-status-selector">
                 <div className="contests__menu-btn-bar__solve-status-selector-title">
                   Solve Status
@@ -335,105 +592,8 @@ function Contest({ codeforce, tachi, dataUser }) {
                   </div>
                 </div>
               </div>
-              <div className="contests__menu-btn-bar__range-filter">
-                <div className="contests__menu-btn-bar__range-filter-group">
-                  <div className="contests__menu-btn-bar__range-filter-btn">
-                    <span>Min Rating:</span>
-                    <input
-                      type="number"
-                      name="minRating"
-                      placeholder="min rating = 0"
-                      step="1"
-                      value={minRating}
-                      onChange={(e) =>
-                        handleChangeFilterMinRating(e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="contests__menu-btn-bar__range-filter-btn">
-                    <span>Max Rating:</span>
-                    <input
-                      type="number"
-                      name="maxRatign"
-                      placeholder="Max Rating = 4000"
-                      step="100"
-                      value={maxRating}
-                      onChange={(e) =>
-                        handleChangeFilterMaxRating(e.target.value)
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="contests__menu-btn-bar__range-filter-group">
-                  <div className="contests__menu-btn-bar__range-filter-btn">
-                    <span>Min ContestId:</span>
-                    <input
-                      type="number"
-                      name="minContestId"
-                      placeholder="Min ContestId = 1"
-                      step="1"
-                      value={minContestId}
-                      onChange={(e) =>
-                        handleChangeFilterMinContestId(e.target.value)
-                      }
-                    />
-                  </div>
-                  <div className="contests__menu-btn-bar__range-filter-btn">
-                    <span>Max ContestId:</span>
-                    <input
-                      type="number"
-                      name="maxContestId"
-                      placeholder="Max ContestId = 4000"
-                      step="1"
-                      value={maxContestId}
-                      onChange={(e) =>
-                        handleChangeFilterMaxContestId(e.target.value)
-                      }
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="contests__menu-btn-bar__tag-selector">
-                <div className="contests__menu-btn-bar__tag-selector-title">
-                  Tags
-                </div>
-
-                <div className="contests__menu-btn-bar__tag-selector-multi-select">
-                  <select
-                    onChange={(e) => {
-                      const oldTagSelected = tagSelected;
-                      if (!oldTagSelected.includes(e.target.value))
-                        setTagSelected([...oldTagSelected, e.target.value]);
-                    }}
-                  >
-                    <option value="" disabled selected hidden>
-                      -- Select tag --
-                    </option>
-                    {listTag.map((value, index) => (
-                      <option value={value}>{value}</option>
-                    ))}
-                  </select>
-                  <i class="fa-solid fa-angle-down"></i>
-                </div>
-                <div className="contests__menu-btn-bar__tag-selector-selected">
-                  {tagSelected.map((value, index) => (
-                    <div
-                      onClick={() => {
-                        const newTags = tagSelected.filter(
-                          (tag) => tag !== value
-                        );
-                        setTagSelected(newTags);
-                      }}
-                      className="contests__menu-btn-bar__tag-selector-selected-item"
-                    >
-                      <span>{value}</span>
-                      <i class="fa-solid fa-xmark"></i>
-                    </div>
-                  ))}
-                </div>
-              </div>
             </div>
-          </div> */}
+          </div>
         </div>
       </div>
       <div className="contest__category-tabs">
@@ -444,7 +604,7 @@ function Contest({ codeforce, tachi, dataUser }) {
                 ? "contest__category-tabs-item active"
                 : "contest__category-tabs-item"
             }
-            onClick={() => toggleItem(value)}
+            onClick={() => toggleItemDiv(value)}
           >
             {value}
           </div>
@@ -456,7 +616,13 @@ function Contest({ codeforce, tachi, dataUser }) {
           <div className="contests__table__thread-item min-width-64">
             <div className="contests__table__thread-item-text">#</div>
           </div>
-          <div className="contests__table__thread-item min-width-280">
+          <div
+            className={
+              viewSelect["Short Name"]
+                ? "contests__table__thread-item min-width-160"
+                : "contests__table__thread-item min-width-280"
+            }
+          >
             <div className="contests__table__thread-item-text">Contest</div>
           </div>
           {orderProblems.map((value) => (
@@ -475,10 +641,45 @@ function Contest({ codeforce, tachi, dataUser }) {
                     {(currentPage - 1) * limitPage + index + 1}
                   </div>
                 </div>
-                <div className="contests__table__content-item  min-width-280">
-                  <div className="contests__table__content-item-title ">
-                    {value.name}
-                  </div>
+                <div
+                  title={`${value.name} \n ID: ${value.id}`}
+                  className={
+                    viewSelect["Short Name"]
+                      ? value.shortName.length > 0
+                        ? "contests__table__content-item  min-width-160"
+                        : "contests__table__content-item  min-width-160 clean"
+                      : "contests__table__content-item  min-width-280"
+                  }
+                >
+                  <a
+                    href={`https://codeforces.com/contest/${value.id}`}
+                    target="_blank"
+                    className="contests__table__content-item-title "
+                  >
+                    {viewSelect["Short Name"] && value.shortName.length > 0
+                      ? value.shortName
+                      : value.name}
+                    <div
+                      className={
+                        viewSelect["Short Name"] &&
+                        !value.div.includes("Educational") &&
+                        !value.div.includes("Global")
+                          ? "contests__table__content-item-title-div active"
+                          : "contests__table__content-item-title-div"
+                      }
+                    >
+                      {value.div}
+                    </div>
+                    <div
+                      className={
+                        viewSelect["Date"]
+                          ? "contests__table__content-item-title-date active"
+                          : "contests__table__content-item-title-date"
+                      }
+                    >
+                      {value.formattedTime}
+                    </div>
+                  </a>
                 </div>
 
                 {Array.from({ length: orderProblems.length }).map(
@@ -487,16 +688,51 @@ function Contest({ codeforce, tachi, dataUser }) {
                     const firstText = problem == "" ? "" : problem.index;
 
                     const LastText = problem == "" ? "" : ". " + problem.name;
-
+                    const ratingColor = problem.rating
+                      ? getRatingColor(problem.rating)
+                      : "gray";
+                    const subRatingColor = problem.rating
+                      ? getSubRatingColor(problem.rating)
+                      : "gray";
                     return (
-                      <div className="contests__table__content-item  min-width-160">
+                      <div
+                        title={`${problem.name}`}
+                        className={
+                          !problem.verdict
+                            ? "contests__table__content-item min-width-160"
+                            : problem.verdict == "OK"
+                            ? "contests__table__content-item min-width-160 solved"
+                            : "contests__table__content-item min-width-160 attemped"
+                        }
+                        style={{
+                          color: viewSelect["Color"] ? ratingColor : "inherit",
+                        }}
+                      >
                         <a
-                          href={`https://codeforces.com/problemset/problem/${problem.contestID}/${problem.index}`}
+                          href={`https://codeforces.com/problemset/problem/${problem.contestId}/${problem.index}`}
                           target="_blank"
                           className="contests__table__content-item-text"
                         >
-                          <span>{firstText}</span> {LastText}
+                          <span
+                            style={{
+                              color: viewSelect["Color"]
+                                ? subRatingColor
+                                : "inherit",
+                            }}
+                          >
+                            {firstText}
+                          </span>{" "}
+                          {LastText}
                         </a>
+                        <div
+                          className={
+                            viewSelect["Rating"]
+                              ? "contests__table__content-item-rating active"
+                              : "contests__table__content-item-rating"
+                          }
+                        >
+                          ({problem.rating ? problem.rating : "N/A"})
+                        </div>
                       </div>
                     );
                   }
