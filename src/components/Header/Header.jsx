@@ -3,6 +3,42 @@ import "./Header.css";
 import { Link } from "react-router-dom";
 import logo from "../../img/cftracker_logo.png";
 
+const defaultData = [
+  {
+    id: 0,
+    contestId: 0,
+    creationTimeSeconds: 0,
+    relativeTimeSeconds: 0,
+    problem: {
+      contestId: 0,
+      index: "",
+      name: "",
+      type: "",
+      points: 0,
+      rating: 0,
+      tags: [],
+    },
+    author: {
+      contestId: 0,
+      participantId: 0,
+      members: [
+        {
+          handle: "",
+        },
+      ],
+      participantType: "",
+      ghost: false,
+      room: 0,
+      startTimeSeconds: 0,
+    },
+    programmingLanguage: "",
+    testset: "",
+    passedTestCount: 0,
+    timeConsumedMillis: 0,
+    memoryConsumedBytes: 0,
+  },
+];
+
 function Header({ codeforce, tachi, propHandleUser }) {
   const [handleUser, setHandleUser] = useState(() => {
     return localStorage.getItem("handleUser") || "";
@@ -111,7 +147,7 @@ function Header({ codeforce, tachi, propHandleUser }) {
       .then((res) => res.json())
       .then((data) => {
         if (data.status === "OK") {
-          propHandleUser(data.result);
+          propHandleUser(data.result.length > 0 ? data.result : defaultData);
           setShowAlertSuccessfull(true);
           setRemainingTime3(1500);
           clearTimeout(timeoutRef3.current);
@@ -121,7 +157,6 @@ function Header({ codeforce, tachi, propHandleUser }) {
           setRemainingTime2(1500);
           clearTimeout(timeoutRef2.current);
           startTimers2();
-          propHandleUser("error");
         }
       })
       .catch((error) => {
@@ -140,7 +175,6 @@ function Header({ codeforce, tachi, propHandleUser }) {
               setRemainingTime2(1500);
               clearTimeout(timeoutRef2.current);
               startTimers2();
-              propHandleUser("error");
             }
           })
           .catch((error) => {

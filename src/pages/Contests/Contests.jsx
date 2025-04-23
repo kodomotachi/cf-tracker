@@ -1,8 +1,11 @@
 import React, { use, useEffect, useState, useRef } from "react";
+import { useLocation } from "react-router-dom";
 import "./Contests.css";
 import Problems from "../Problems";
 
-function Contest({ codeforce, tachi, dataUser }) {
+function Contest({ dataUser, propProblems, propContests, propListTag }) {
+  const location = useLocation();
+
   const [problems, setProblems] = useState([]);
   const [userProblems, setUserProblems] = useState([]);
   const [contests, setContests] = useState([]);
@@ -63,65 +66,11 @@ function Contest({ codeforce, tachi, dataUser }) {
   const [filterTableToggle, setfilterTableToggle] = useState(0);
   const dropdownRef = useRef(null);
 
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
-    fetch(codeforce + "/api/problemset.problems")
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.status === "OK") {
-          setProblems(res.result.problems);
-          const tagSet = new Set();
-          res.result.problems.forEach((problem) => {
-            problem.tags.forEach((tag) => tagSet.add(tag));
-          });
-          setListTag([...tagSet]);
-        } else {
-          fetch(tachi + "/api/problemset.problems")
-            .then((res1) => res1.json())
-            .then((res1) => {
-              if (res1.status === "OK") {
-                setProblems(res1.result.problems);
-                const tagSet = new Set();
-                res1.result.problems.forEach((problem) => {
-                  problem.tags.forEach((tag) => tagSet.add(tag));
-                });
-                setListTag([...tagSet]);
-              } else {
-                console.error("Lỗi khi lấy dữ liệu:", res1);
-              }
-            })
-            .catch((error) => console.error("Lỗi kết nối API:", error))
-            .finally(() => setLoading(false));
-        }
-      })
-      .catch((error) => console.error("Lỗi kết nối API:", error))
-      .finally(() => setLoading(false));
-  }, []);
-
-  useEffect(() => {
-    fetch(codeforce + "/api/contest.list?gym=false")
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.status === "OK") {
-          setContests(res.result);
-        } else {
-          fetch(tachi + "/api/contest.list?gym=false")
-            .then((res1) => res1.json())
-            .then((res1) => {
-              if (res1.status === "OK") {
-                setContests(res1.result);
-              } else {
-                console.error("Lỗi khi lấy dữ liệu:", res1);
-              }
-            })
-            .catch((error) => console.error("Lỗi kết nối API:", error))
-            .finally(() => setLoading(false));
-        }
-      })
-      .catch((error) => console.error("Lỗi kết nối API:", error))
-      .finally(() => setLoading(false));
-  }, []);
+    setProblems(propProblems);
+    setListTag(propListTag);
+    setContests(propContests);
+  }, [propProblems, propListTag, propContests]);
 
   useEffect(() => {
     const order = new Set();
@@ -144,7 +93,7 @@ function Contest({ codeforce, tachi, dataUser }) {
   }, [dataDisplay, currentPage, limitPage]);
 
   useEffect(() => {
-    var currentproblems = problems;
+    let currentproblems = problems;
     if (userProblems.length > 0) currentproblems = userProblems;
     const problemMap = new Map();
 
@@ -249,9 +198,6 @@ function Contest({ codeforce, tachi, dataUser }) {
   }, [contests, problems, userProblems]);
 
   useEffect(() => {
-    if (dataUser == "error") {
-      return;
-    }
     if (dataUser == "") {
       setData(oldData);
       setDataDisplay(oldData);
@@ -282,7 +228,7 @@ function Contest({ codeforce, tachi, dataUser }) {
     });
 
     setUserProblems(result);
-  }, [dataUser]);
+  }, [dataUser, problems]);
 
   useEffect(() => {
     const newData = data.filter((contest) => {
@@ -539,8 +485,9 @@ function Contest({ codeforce, tachi, dataUser }) {
                   View Settings
                 </div>
                 <div className="contests__menu-btn-bar__view-settings-container">
-                  {viewSettings.map((value) => (
+                  {viewSettings.map((value, index) => (
                     <div
+                      key={index}
                       onClick={() => toggleItemViewSetting(value)}
                       className={
                         viewSelect[value]
@@ -602,6 +549,7 @@ function Contest({ codeforce, tachi, dataUser }) {
       <div className="contest__category-tabs">
         {categoriesContest.map((value, index) => (
           <div
+            key={index}
             className={
               filterDiv[value]
                 ? "contest__category-tabs-item active"

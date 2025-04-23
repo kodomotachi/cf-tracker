@@ -1,6 +1,15 @@
-import React, { use, useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import { useLocation } from "react-router-dom";
+
 import "./Problems.css";
-function Problems({ codeforce, tachi, dataUser }) {
+function Problems({
+  dataUser,
+  propProblems,
+  propProblemsStatistics,
+  propListTag,
+}) {
+  const location = useLocation();
+
   const [problems, setProblems] = useState([]);
   const [problemsStatistics, setProblemsStatistics] = useState([]);
   const [mergedProblems, setMergedProblems] = useState([]);
@@ -33,16 +42,13 @@ function Problems({ codeforce, tachi, dataUser }) {
   const [filterTableToggle, setfilterTableToggle] = useState(0);
   const dropdownRef = useRef(null);
 
-  const [loading, setLoading] = useState(true);
   // handle with data User
   useEffect(() => {
-    if (dataUser == "error") {
-      return;
-    }
     if (dataUser == "") {
       setData(mergedProblems);
       return;
     }
+
     const verdictMap = {};
 
     dataUser.forEach((value) => {
@@ -121,40 +127,10 @@ function Problems({ codeforce, tachi, dataUser }) {
   ]);
 
   useEffect(() => {
-    fetch(codeforce + "/api/problemset.problems")
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.status === "OK") {
-          setProblems(res.result.problems);
-          setProblemsStatistics(res.result.problemStatistics);
-          const tagSet = new Set();
-          res.result.problems.forEach((problem) => {
-            problem.tags.forEach((tag) => tagSet.add(tag));
-          });
-          setListTag([...tagSet]);
-        } else {
-          fetch(tachi + "/api/problemset.problems")
-            .then((res1) => res1.json())
-            .then((res1) => {
-              if (res1.status === "OK") {
-                setProblems(res1.result.problems);
-                setProblemsStatistics(res1.result.problemStatistics);
-                const tagSet = new Set();
-                res1.result.problems.forEach((problem) => {
-                  problem.tags.forEach((tag) => tagSet.add(tag));
-                });
-                setListTag([...tagSet]);
-              } else {
-                console.error("Lỗi khi lấy dữ liệu:", res1);
-              }
-            })
-            .catch((error) => console.error("Lỗi kết nối API:", error))
-            .finally(() => setLoading(false));
-        }
-      })
-      .catch((error) => console.error("Lỗi kết nối API:", error))
-      .finally(() => setLoading(false));
-  }, []);
+    setProblems(propProblems);
+    setProblemsStatistics(propProblemsStatistics);
+    setListTag(propListTag);
+  }, [propProblems, propProblemsStatistics, propListTag]);
 
   useEffect(() => {
     const merged = problems.map((problem) => {
@@ -264,12 +240,11 @@ function Problems({ codeforce, tachi, dataUser }) {
   };
 
   useEffect(() => {
-    setDataDisplay(data);
     //  if (data.length > 0 && !perPage.includes(data.length)) {
     //    setPerPage([10, 20, 50, 100, 200, data.length]);
     //  }
-    setMaxPage(Math.ceil(data.length / limitPage));
-  }, [data, limitPage]);
+    setMaxPage(Math.ceil(dataDisplay.length / limitPage));
+  }, [dataDisplay, limitPage]);
 
   useEffect(() => {
     if (gotoPage != "") setCurrentPage(gotoPage);
