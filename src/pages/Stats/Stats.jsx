@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import "./Stats.css";
 import CalHeatmap from "cal-heatmap";
 import Tooltip from "cal-heatmap/plugins/Tooltip";
@@ -7,21 +8,16 @@ import CalendarLabel from "cal-heatmap/plugins/CalendarLabel";
 import "cal-heatmap/cal-heatmap.css";
 
 function Stats({ dataUser, propProblems, propContests, propListTag }) {
+  const location = useLocation();
   const currentYear = new Date().getFullYear();
 
   const [listYears, setListYears] = useState([currentYear]);
-  const [thisYear, setThisYear] = useState(currentYear);
+  const [thisYear, setThisYear] = useState(0);
   const calRef = useRef(null);
   const calInstance = useRef(null);
 
   useEffect(() => {
     if (!dataUser || dataUser.length === 0) return;
-
-    // Nếu đã có heatmap thì destroy trước để vẽ lại
-    if (calInstance.current) {
-      calInstance.current.destroy();
-    }
-
     // Xử lý dữ liệu: gom số lượng submit theo từng ngày
     const yearsSet = new Set([...listYears]);
     const formattedData = Object.entries(
@@ -107,7 +103,6 @@ function Stats({ dataUser, propProblems, propContests, propListTag }) {
           LegendLite,
           {
             includeBlank: true,
-            itemSelector: "#ex-ghDay-legend",
             radius: 2,
             width: 11,
             height: 11,
@@ -126,14 +121,20 @@ function Stats({ dataUser, propProblems, propContests, propListTag }) {
         ],
       ]
     );
-
     // Cleanup
     return () => {
+      if (calRef.current) {
+        calRef.current.innerHTML = ""; // Xóa hết nội dung cũ trước khi vẽ lại
+      }
       calInstance.current?.destroy();
     };
-  }, [dataUser, thisYear]);
+  }, [dataUser, thisYear, location.pathname]);
 
-  //   console.log(dataUser);
+  useEffect(() => {
+    setThisYear(currentYear);
+  }, [location.pathname]);
+
+  console.log(dataUser);
   return (
     <div className="stats">
       <div className="stats-body">

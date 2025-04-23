@@ -111,6 +111,7 @@
   animation: slideInRight 0.2s ease forwards;
   font-size: 16px;
   cursor: pointer;
+  z-index: 2;
 }
 
 .header__search-box-alert.hide {

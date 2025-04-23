@@ -129,18 +129,7 @@ const App = () => {
               />
             }
           />
-          <Route
-            path="/stats"
-            exact
-            element={
-              <Stats
-                dataUser={dataUser}
-                propProblems={problems}
-                propContests={contests}
-                propListTag={listTag}
-              />
-            }
-          />
+          <Route path="/stats" exact element={<Stats dataUser={dataUser} />} />
         </Routes>
       </Router>
     </div>
