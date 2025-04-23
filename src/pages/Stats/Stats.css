@@ -1,0 +1,61 @@
+.stats {
+  display: flex;
+  justify-content: center;
+}
+.stats-body {
+  width: 100%;
+  margin: 0 160px;
+}
+.stats-body-title {
+  display: flex;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 20px;
+}
+.stats-body-filter-table {
+  font-size: 18px;
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 48px;
+}
+
+.stats-body-filter-cnt {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--prime-color);
+  color: var(--text-color);
+  border-radius: 5px;
+  position: relative;
+}
+
+.stats-body-filter-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  padding: 4px 56px;
+  padding-left: 20px;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  outline: none;
+}
+
+.stats-body-filter-btn:focus {
+  outline: none;
+}
+
+.stats-body-filter-btn-icon {
+  font-size: 16px;
+  color: var(--prime-color);
+  position: absolute;
+  top: 6px;
+  right: 12px;
+  pointer-events: none;
+}
+.stats-body-heatmap {
+  display: flex;
+  justify-content: center;
+  transform: scale(1.3); /* Tăng tỷ lệ tổng thể của bảng */
+}

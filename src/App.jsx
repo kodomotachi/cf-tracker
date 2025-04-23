@@ -7,9 +7,10 @@ import {
 } from "react-router-dom";
 
 import "./App.css";
+import Header from "./components/Header";
 import Problems from "./pages/Problems";
 import Contests from "./pages/Contests";
-import Header from "./components/Header";
+import Stats from "./pages/Stats";
 
 const App = () => {
   const [dataUser, setDataUser] = useState([]);
@@ -121,6 +122,18 @@ const App = () => {
             exact
             element={
               <Contests
+                dataUser={dataUser}
+                propProblems={problems}
+                propContests={contests}
+                propListTag={listTag}
+              />
+            }
+          />
+          <Route
+            path="/stats"
+            exact
+            element={
+              <Stats
                 dataUser={dataUser}
                 propProblems={problems}
                 propContests={contests}
