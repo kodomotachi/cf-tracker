@@ -189,7 +189,7 @@ function Problems({
         }
         return b.index.localeCompare(a.index); // nếu cùng contestId, sort tiếp theo index (A < B < C ...)
       });
-    setData(sorted);
+    setDataDisplay(sorted);
   }, [sortId]);
 
   useEffect(() => {
@@ -199,7 +199,7 @@ function Problems({
       sorted.sort((a, b) => (a.rating || 100000) - (b.rating || 100000));
     else if (sortRating == 0)
       sorted.sort((a, b) => (b.rating || 100000) - (a.rating || 100000));
-    setData(sorted);
+    setDataDisplay(sorted);
   }, [sortRating]);
 
   useEffect(() => {
@@ -209,7 +209,7 @@ function Problems({
       sorted.sort((a, b) => (a.solvedCount || 0) - (b.solvedCount || 0));
     else if (sortSolvedCount == 0)
       sorted.sort((a, b) => (b.solvedCount || 0) - (a.solvedCount || 0));
-    setData(sorted);
+    setDataDisplay(sorted);
   }, [sortSolvedCount]);
 
   useEffect(() => {

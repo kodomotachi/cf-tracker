@@ -16,7 +16,7 @@
   justify-content: center;
   font-weight: 600;
   font-size: 20px;
-  color: var(--disable-color);
+  color: var(--title-color);
 }
 
 .bar-chart__body {
