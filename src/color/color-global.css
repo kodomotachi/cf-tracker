@@ -18,6 +18,7 @@
   --successful-color: #01a601;
   --bug-color: #b43e32;
 
+  --title-color: #6b6e71;
   --text-color: #212529;
 
   /* Rating Color */
@@ -26,8 +27,8 @@
   --sub-rating-color-1: gray;
   --rating-color-1: gray;
 
-  --sub-rating-color-2: rgb(136, 204, 34);
-  --rating-color-2: rgb(136, 204, 34);
+  --sub-rating-color-2: green;
+  --rating-color-2: green;
 
   --sub-rating-color-3: green;
   --rating-color-3: green;
@@ -53,6 +54,6 @@
   --sub-rating-color-10: red;
   --rating-color-10: red;
 
-  --sub-rating-color-11: black;
+  --sub-rating-color-11: red;
   --rating-color-11: red;
 }

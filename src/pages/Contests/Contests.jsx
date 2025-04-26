@@ -337,13 +337,8 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
       return "var(--rating-color-7)";
     } else if (rating <= 2600) {
       return "var(--rating-color-8)";
-    } else if (rating <= 2800) {
-      return "var(--rating-color-9)";
-    } else if (rating <= 3000) {
-      return "var(--rating-color-10)";
-    } else {
-      return "var(--rating-color-11)";
-    }
+    } else if (rating <= 2800) return "var(--rating-color-9)";
+    return "var(--rating-color-10)";
   };
   const getSubRatingColor = (rating) => {
     if (rating <= 1200) {

@@ -11,6 +11,7 @@ import Header from "./components/Header";
 import Problems from "./pages/Problems";
 import Contests from "./pages/Contests";
 import Stats from "./pages/Stats";
+import ScrollUpBtn from "./components/ScrollUpBtn";
 
 const App = () => {
   const [dataUser, setDataUser] = useState([]);
@@ -129,8 +130,13 @@ const App = () => {
               />
             }
           />
-          <Route path="/stats" exact element={<Stats dataUser={dataUser} />} />
+          <Route
+            path="/stats"
+            exact
+            element={<Stats dataUser={dataUser} propContests={contests} />}
+          />
         </Routes>
+        <ScrollUpBtn />
       </Router>
     </div>
   );

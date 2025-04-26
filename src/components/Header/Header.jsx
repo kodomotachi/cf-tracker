@@ -5,7 +5,7 @@ import logo from "../../img/cftracker_logo.png";
 
 const defaultData = [
   {
-    id: 0,
+    id: "none",
     contestId: 0,
     creationTimeSeconds: 0,
     relativeTimeSeconds: 0,
