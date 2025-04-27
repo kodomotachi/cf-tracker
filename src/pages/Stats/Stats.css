@@ -1,0 +1,5 @@
+.stats {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 144px;
+}

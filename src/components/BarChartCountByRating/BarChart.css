@@ -1,0 +1,27 @@
+.bar-chart {
+  display: flex;
+  justify-content: center;
+  align-self: center;
+  flex-direction: column;
+  margin: 24px 160px;
+  margin-bottom: 36px;
+}
+
+.bar-chart__header {
+  margin-bottom: 24px;
+}
+
+.bar-chart__header-title {
+  display: flex;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 20px;
+  color: var(--title-color);
+}
+
+.bar-chart__body {
+  display: flex;
+  justify-content: center;
+  height: 500px;
+  min-height: 500px;
+}
