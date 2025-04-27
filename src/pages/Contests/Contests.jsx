@@ -216,11 +216,11 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
   }, [contests, problems, userProblems]);
 
   useEffect(() => {
-    if (dataUser == "") {
-      setData(oldData);
-      setDataDisplay(oldData);
-      return;
-    }
+    //  if (dataUser == "") {
+    //    setData(oldData);
+    //    setDataDisplay(oldData);
+    //    return;
+    //  }
     const verdictMap = {};
 
     dataUser.forEach((value) => {
