@@ -37,6 +37,11 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
     return initialState;
   });
   const [viewSelect, setViewSelect] = useState(() => {
+    const stored = localStorage.getItem("viewSelect");
+    if (stored) {
+      return JSON.parse(stored); // Nếu đã lưu thì lấy ra
+    }
+    // Nếu chưa có trong localStorage thì tạo mặc định
     const initialState = {};
     viewSettings.forEach((cat) => {
       initialState[cat] = false;
@@ -44,9 +49,22 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
     return initialState;
   });
 
-  const [filterSolved, setFilterSolved] = useState(1);
-  const [filterAttemped, setFilterAttemped] = useState(0);
-  const [filterUnsolved, setFilterUnsolved] = useState(0);
+  const [filterSolved, setFilterSolved] = useState(() => {
+    const stored = localStorage.getItem("filterSolved");
+    if (stored === null) return true;
+    return stored === "true";
+  });
+
+  const [filterAttemped, setFilterAttemped] = useState(() => {
+    const stored = localStorage.getItem("filterAttemped");
+    if (stored === null) return false;
+    return stored === "true";
+  });
+  const [filterUnsolved, setFilterUnsolved] = useState(() => {
+    const stored = localStorage.getItem("filterUnsolved");
+    if (stored === null) return false;
+    return stored === "true";
+  });
 
   const [orderProblems, setOrderProblems] = useState([]);
   const [listTag, setListTag] = useState([]);
@@ -299,10 +317,14 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
     }
   };
   const toggleItemViewSetting = (value) => {
-    setViewSelect((prev) => ({
-      ...prev,
-      [value]: !prev[value],
-    }));
+    setViewSelect((prev) => {
+      const updated = {
+        ...prev,
+        [value]: !prev[value],
+      };
+      localStorage.setItem("viewSelect", JSON.stringify(updated)); // Lưu lại
+      return updated;
+    });
   };
 
   const handleChange = (selectedValues) => {
@@ -506,7 +528,11 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
                 </div>
                 <div className="contests__menu-btn-bar__solve-status-selector-group">
                   <div
-                    onClick={() => setFilterSolved(!filterSolved)}
+                    onClick={() => {
+                      const oldData = filterSolved;
+                      localStorage.setItem("filterSolved", !oldData);
+                      setFilterSolved(!oldData);
+                    }}
                     className={
                       filterSolved
                         ? "contests__menu-btn-bar__solve-status-selector-btn active"
@@ -516,7 +542,11 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
                     SOLVED
                   </div>
                   <div
-                    onClick={() => setFilterAttemped(!filterAttemped)}
+                    onClick={() => {
+                      const oldData = filterAttemped;
+                      localStorage.setItem("filterAttemped", !oldData);
+                      setFilterAttemped(!oldData);
+                    }}
                     className={
                       filterAttemped
                         ? "contests__menu-btn-bar__solve-status-selector-btn active"
@@ -526,7 +556,11 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
                     ATTEMPED
                   </div>
                   <div
-                    onClick={() => setFilterUnsolved(!filterUnsolved)}
+                    onClick={() => {
+                      const oldData = filterUnsolved;
+                      localStorage.setItem("filterUnsolved", !oldData);
+                      setFilterUnsolved(!oldData);
+                    }}
                     className={
                       filterUnsolved
                         ? "contests__menu-btn-bar__solve-status-selector-btn active"
@@ -766,6 +800,11 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
           </div>
         </div>
       </div>
+      <div
+        className={
+          filterTableToggle ? "problems__modal show" : "problems__modal"
+        }
+      ></div>
     </div>
   );
 }
