@@ -23,7 +23,7 @@
 
   /* Rating Color */
   /*sub-color for first character */
-
+/* 
   --sub-rating-color-1: gray;
   --rating-color-1: gray;
 
@@ -56,4 +56,17 @@
 
   --sub-rating-color-11: red;
   --rating-color-11: red;
+
+   */
+  --color-black: black;
+  --color-newbie: gray;
+  --color-pupil: green;
+  --color-specialist: rgb(3, 168, 158);
+  --color-expert: blue;
+  --color-candidate-master: rgb(170, 0, 170);
+  --color-master: rgb(255, 140, 0);
+  --color-international-master: rgb(202, 111, 0);
+  --color-grandmaster: red;
+  --color-legendary-grandmaster: rgb(170, 0, 0);
+
 }

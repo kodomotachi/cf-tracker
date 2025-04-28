@@ -1,0 +1,37 @@
+.contest-button
+{
+	margin-left: 30px;
+	margin-top: 30px;
+}
+
+.left, .among, .right
+{
+	background-color: #6c757d;
+	border: 1px solid #6c757d;
+	padding: 5px 17px;
+	background: #6c757d;
+	font-size: 18px;
+	/* font-family: "Roboto", sans-serif; */
+	cursor: pointer;
+}
+
+.left
+{
+	border-top-left-radius: 6px;
+  	border-bottom-left-radius: 6px;
+}
+
+.right
+{
+	border-top-right-radius: 6px;
+  	border-bottom-right-radius: 6px;
+}
+
+.content
+{
+	color: white;
+	margin-left: 12px;
+	margin-top: 7px;
+	margin-bottom: 7px;
+	margin-right: 12px;
+}
