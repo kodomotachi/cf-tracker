@@ -343,48 +343,45 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
   };
 
   const getRatingColor = (rating) => {
-    if (rating <= 1200) {
-      return "var(--rating-color-1)";
-    } else if (rating <= 1400) {
-      return "var(--rating-color-2)";
-    } else if (rating <= 1600) {
-      return "var(--rating-color-3)";
-    } else if (rating <= 1800) {
-      return "var(--rating-color-4)";
-    } else if (rating <= 2000) {
-      return "var(--rating-color-5)";
-    } else if (rating <= 2200) {
-      return "var(--rating-color-6)";
-    } else if (rating <= 2400) {
-      return "var(--rating-color-7)";
-    } else if (rating <= 2600) {
-      return "var(--rating-color-8)";
-    } else if (rating <= 2800) return "var(--rating-color-9)";
-    return "var(--rating-color-10)";
+    if (rating < 1200) {
+      return "var(--color-newbie)";
+    } else if (rating < 1400) {
+      return "var(--color-pupil)";
+    } else if (rating < 1600) {
+      return "var(--color-specialist)";
+    } else if (rating < 1900) {
+      return "var(--color-expert)";
+    } else if (rating < 2100) {
+      return "var(--color-candidate-master)";
+    } else if (rating < 2300) {
+      return "var(--color-master)";
+    } else if (rating < 2400) {
+      return "var(--color-international-master)";
+    } else if (rating < 3000) {
+      return "var(--color-grandmaster)";
+    } else if (rating < 4000) {
+      return "var(--color-legendary-grandmaster)";
+    }
   };
   const getSubRatingColor = (rating) => {
-    if (rating <= 1200) {
-      return "var(--sub-rating-color-1)";
-    } else if (rating <= 1400) {
-      return "var(--sub-rating-color-2)";
-    } else if (rating <= 1600) {
-      return "var(--sub-rating-color-3)";
-    } else if (rating <= 1800) {
-      return "var(--sub-rating-color-4)";
-    } else if (rating <= 2000) {
-      return "var(--sub-rating-color-5)";
-    } else if (rating <= 2200) {
-      return "var(--sub-rating-color-6)";
-    } else if (rating <= 2400) {
-      return "var(--sub-rating-color-7)";
-    } else if (rating <= 2600) {
-      return "var(--sub-rating-color-8)";
-    } else if (rating <= 2800) {
-      return "var(--sub-rating-color-9)";
-    } else if (rating <= 3000) {
-      return "var(--sub-rating-color-10)";
-    } else {
-      return "var(--sub-rating-color-11)";
+    if (rating < 1200) {
+      return "var(--color-newbie)";
+    } else if (rating < 1400) {
+      return "var(--color-pupil)";
+    } else if (rating < 1600) {
+      return "var(--color-specialist)";
+    } else if (rating < 1900) {
+      return "var(--color-expert)";
+    } else if (rating < 2100) {
+      return "var(--color-candidate-master)";
+    } else if (rating < 2300) {
+      return "var(--color-master)";
+    } else if (rating < 2400) {
+      return "var(--color-international-master)";
+    } else if (rating < 3000) {
+      return "var(--color-grandmaster)";
+    } else if (rating < 4000) {
+      return "var(--legendary-grandmaster)";
     }
   };
 
@@ -680,10 +677,10 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
                           const LastText = ". " + problem.name;
                           const ratingColor = problem.rating
                             ? getRatingColor(problem.rating)
-                            : "gray";
+                            : "black";
                           const subRatingColor = problem.rating
                             ? getSubRatingColor(problem.rating)
-                            : "gray";
+                            : "black";
 
                           return (
                             <div
