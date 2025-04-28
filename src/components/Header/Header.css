@@ -1,0 +1,220 @@
+@import url(../../color/color-global.css);
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100px);
+    display: none;
+  }
+}
+
+@keyframes shrinkBar {
+  from {
+    width: 100%;
+  }
+  to {
+    width: 0%;
+  }
+}
+
+.header {
+  height: 68px;
+  background-color: var(--background-color);
+  margin-bottom: 24px;
+}
+.header__container {
+  margin: 0 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header__logo {
+}
+
+.header__logo-img {
+  height: 68px;
+}
+.header__logo-text {
+  color: var(--highlight-color);
+  font-weight: 600;
+  font-size: 20px;
+}
+.header__menu {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.header__menu-nav {
+  margin: 0 48px;
+}
+.header__menu-nav-item {
+  color: var(--muted-color);
+  font-size: 16px;
+  padding: 0 16px;
+  line-height: 64px;
+  font-weight: 500;
+}
+
+.header__menu-nav-item:hover {
+  color: var(--highlight-color);
+}
+
+.header__search-box {
+}
+
+.header__search-box-input {
+  height: 40px;
+  width: 240px;
+  background-color: #fff;
+  border-radius: 5px;
+  padding: 0px 12px;
+}
+
+.header__search-box-input::placeholder {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.header__search-box-input:focus {
+  outline: 2px solid var(--sub-color);
+}
+
+.header__search-box-alert {
+  min-width: 300px;
+  max-width: 300px;
+  position: fixed;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+  color: #fff;
+  background-color: var(--background-color);
+  padding-top: 20px;
+  border-radius: 5px;
+  bottom: 80px;
+  right: 42px;
+  animation: slideInRight 0.2s ease forwards;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.header__search-box-alert.hide {
+  animation: fadeOut 0.2s ease forwards;
+}
+
+.header__search-box-alert span {
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  text-align: left;
+  padding: 0 20px;
+  padding-bottom: 8px;
+}
+
+.header__search-box-alert i {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+}
+
+.header__search-box-alert-line {
+  width: 100%;
+  height: 5px;
+  background-color: var(--prime-color); /* màu line, tùy chỉnh */
+  animation: shrinkBar 1.5s linear forwards;
+  border-radius: 0 0 5px 5px;
+  margin-top: 10px;
+  animation-play-state: running;
+}
+
+.header__search-box-alert:hover .header__search-box-alert-line {
+  animation-play-state: paused;
+}
+
+.header__search-box-alert--failed {
+  max-width: 300px;
+  line-height: 1.4;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  bottom: 64%;
+  right: 42px;
+}
+
+.header__search-box-alert--failed-cnt {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header__search-box-alert--failed-icon {
+  position: inherit !important;
+  color: var(--bug-color);
+  font-size: 24px;
+  padding-left: 20px;
+}
+.header__search-box-alert--failed-line {
+  width: 100%;
+  height: 5px;
+  background-color: var(--bug-color); /* màu line, tùy chỉnh */
+  animation: shrinkBar 1.5s linear forwards;
+  border-radius: 0 0 5px 5px;
+  margin-top: 10px;
+  animation-play-state: running;
+}
+
+.header__search-box-alert--failed:hover .header__search-box-alert--failed-line {
+  animation-play-state: paused;
+}
+-------- .header__search-box-alert--successful {
+  max-width: 300px;
+  line-height: 1.4;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  bottom: 64%;
+  right: 42px;
+}
+
+.header__search-box-alert--successful-cnt {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.header__search-box-alert--successful-icon {
+  position: inherit !important;
+  color: var(--successful-color);
+  font-size: 24px;
+  padding-left: 20px;
+}
+.header__search-box-alert--successful-line {
+  width: 100%;
+  height: 5px;
+  background-color: var(--successful-color); /* màu line, tùy chỉnh */
+  animation: shrinkBar 1.5s linear forwards;
+  border-radius: 0 0 5px 5px;
+  margin-top: 10px;
+  animation-play-state: running;
+}
+
+.header__search-box-alert--successful:hover
+  .header__search-box-alert--successful-line {
+  animation-play-state: paused;
+}

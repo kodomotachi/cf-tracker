@@ -1,0 +1,59 @@
+:root {
+  /* --sub-color: #8b7c93; */
+  --prime-color: #8b7c93;
+  --sub-color: #b89bb3;
+
+  --background-color: #22272e;
+
+  --line-color: hsla(215, 15%, 16%, 0.3);
+  --sub-line-color: hsla(215, 15%, 16%, 0.15);
+
+  --muted-color: rgba(255, 255, 255, 0.55);
+  --disable-color: #565e64;
+  --highlight-color: rgba(255, 255, 255, 1);
+
+  --solved-color: #d4edc9;
+  --attemped-color: #ffe3e3;
+
+  --successful-color: #01a601;
+  --bug-color: #b43e32;
+
+  --title-color: #6b6e71;
+  --text-color: #212529;
+
+  /* Rating Color */
+  /*sub-color for first character */
+
+  --sub-rating-color-1: gray;
+  --rating-color-1: gray;
+
+  --sub-rating-color-2: green;
+  --rating-color-2: green;
+
+  --sub-rating-color-3: green;
+  --rating-color-3: green;
+
+  --sub-rating-color-4: rgb(3, 168, 158);
+  --rating-color-4: rgb(3, 168, 158);
+
+  --sub-rating-color-5: blue;
+  --rating-color-5: blue;
+
+  --sub-rating-color-6: rgb(170, 0, 170);
+  --rating-color-6: rgb(170, 0, 170);
+
+  --sub-rating-color-7: rgb(255, 140, 0);
+  --rating-color-7: rgb(255, 140, 0);
+
+  --sub-rating-color-8: rgb(255, 140, 0);
+  --rating-color-8: rgb(255, 140, 0);
+
+  --sub-rating-color-9: red;
+  --rating-color-9: red;
+
+  --sub-rating-color-10: red;
+  --rating-color-10: red;
+
+  --sub-rating-color-11: red;
+  --rating-color-11: red;
+}
