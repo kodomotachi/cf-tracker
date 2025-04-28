@@ -167,6 +167,7 @@ function HeatMap({ dataUser }) {
             >
               {listYears.map((value, index) => (
                 <option
+                  key={index}
                   className="heat-map-chart__header-filter-btn-text"
                   value={value}
                 >

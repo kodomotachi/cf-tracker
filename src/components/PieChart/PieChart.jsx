@@ -33,15 +33,27 @@ function PieChart({ dataUser }) {
 
     const labels = Object.keys(verdictCount);
     const values = Object.values(verdictCount);
-    const backgroundColors = [
-      "#4ade80", // green
-      "#f87171", // red
-      "#60a5fa", // blue
-      "#facc15", // yellow
-      "#a78bfa", // purple
-      "#f472b6", // pink
-      "#94a3b8", // gray
-    ];
+    const statusColors = {
+      FAILED: "#e74c3c",
+      OK: "#27ae60",
+      PARTIAL: "#f1c40f",
+      COMPILATION_ERROR: "#e67e22",
+      RUNTIME_ERROR: "#d35400",
+      WRONG_ANSWER: "#e26255",
+      TIME_LIMIT_EXCEEDED: "#9b59b6",
+      MEMORY_LIMIT_EXCEEDED: "#3498db",
+      IDLENESS_LIMIT_EXCEEDED: "#2980b9",
+      SECURITY_VIOLATED: "#8e44ad",
+      CRASHED: "#2c3e50",
+      INPUT_PREPARATION_CRASHED: "#34495e",
+      CHALLENGED: "#16a085",
+      SKIPPED: "#95a5a6",
+      TESTING: "#f39c12",
+      REJECTED: "#e74c3c",
+      SUBMITTED: "#3498db",
+    };
+
+    const backgroundColors = labels.map((status) => statusColors[status]);
 
     setChartData({
       labels: labels,
