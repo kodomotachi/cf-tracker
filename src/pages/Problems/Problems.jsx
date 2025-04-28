@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useLocation } from "react-router-dom";
 
 import "./Problems.css";
+
 function Problems({
   dataUser,
   propProblems,
@@ -9,7 +10,6 @@ function Problems({
   propListTag,
 }) {
   const location = useLocation();
-
   const [problems, setProblems] = useState([]);
   const [problemsStatistics, setProblemsStatistics] = useState([]);
   const [mergedProblems, setMergedProblems] = useState([]);
@@ -21,22 +21,50 @@ function Problems({
 
   const [minPage, setMinPage] = useState(1);
   const [maxPage, setMaxPage] = useState(1);
-  const [minRating, setMinRating] = useState(0);
-  const [maxRating, setMaxRating] = useState(4000);
-  const [minContestId, setMinContestId] = useState(1);
-  const [maxContestId, setMaxContestId] = useState(4000);
-  const [listTag, setListTag] = useState([]);
+
+  const [minRating, setMinRating] = useState(() => {
+    return localStorage.getItem("minRating") || 0;
+  });
+  const [maxRating, setMaxRating] = useState(() => {
+    return localStorage.getItem("maxRating") || 4000;
+  });
+  const [minContestId, setMinContestId] = useState(() => {
+    return localStorage.getItem("minContestId") || 1;
+  });
+  const [maxContestId, setMaxContestId] = useState(() => {
+    return localStorage.getItem("maxContestId") || 4000;
+  });
+  const [listTag, setListTag] = useState(() => {
+    const raw = localStorage.getItem("listTag");
+    return raw ? raw.split(",") : [];
+  });
+  const [filterSolved, setFilterSolved] = useState(() => {
+    const stored = localStorage.getItem("filterSolved");
+    if (stored === null) return true;
+    return stored === "true";
+  });
+
+  const [filterAttemped, setFilterAttemped] = useState(() => {
+    const stored = localStorage.getItem("filterAttemped");
+    if (stored === null) return false;
+    return stored === "true";
+  });
+  const [filterUnsolved, setFilterUnsolved] = useState(() => {
+    const stored = localStorage.getItem("filterUnsolved");
+    if (stored === null) return false;
+    return stored === "true";
+  });
+  const [tagSelected, setTagSelected] = useState(() => {
+    const raw = localStorage.getItem("tagSelected");
+    return raw ? raw.split(",") : [];
+  });
 
   const [sortId, setSortId] = useState(-1);
   const [sortRating, setSortRating] = useState(-1);
   const [sortSolvedCount, setSortSolvedCount] = useState(-1);
-  const [filterSolved, setFilterSolved] = useState(1);
-  const [filterAttemped, setFilterAttemped] = useState(0);
-  const [filterUnsolved, setFilterUnsolved] = useState(0);
 
   const [search, setSearch] = useState([]);
   const [gotoPage, setGotoPage] = useState(1);
-  const [tagSelected, setTagSelected] = useState([]);
   const [dataDisplay, setDataDisplay] = useState([]);
 
   const [filterTableToggle, setfilterTableToggle] = useState(0);
@@ -44,11 +72,6 @@ function Problems({
 
   // handle with data User
   useEffect(() => {
-    if (dataUser == "") {
-      setData(mergedProblems);
-      return;
-    }
-
     const verdictMap = {};
 
     dataUser.forEach((value) => {
@@ -130,6 +153,7 @@ function Problems({
     setProblems(propProblems);
     setProblemsStatistics(propProblemsStatistics);
     setListTag(propListTag);
+    localStorage.setItem("listTag", propListTag);
   }, [propProblems, propProblemsStatistics, propListTag]);
 
   useEffect(() => {
@@ -148,6 +172,7 @@ function Problems({
     merged.sort((a, b) => (a.rating || 100000) - (b.rating || 100000));
     setMergedProblems(merged);
     setData(merged);
+    setDataDisplay(merged);
   }, [problems, problemsStatistics]);
 
   // sort by contest ID, rating, solvedCount
@@ -283,7 +308,7 @@ function Problems({
     }
     let rating = Math.floor(value);
     if (value <= 0) rating = minPage;
-
+    localStorage.setItem("minRating", rating);
     setMinRating(rating);
   };
 
@@ -294,7 +319,7 @@ function Problems({
     }
     let rating = Math.floor(value);
     if (value <= 0) rating = minPage;
-
+    localStorage.setItem("maxRating", rating);
     setMaxRating(rating);
   };
 
@@ -305,7 +330,7 @@ function Problems({
     }
     let pageCurrent = Math.floor(value);
     if (value <= 0) pageCurrent = minPage;
-
+    localStorage.setItem("minContestId", pageCurrent);
     setMinContestId(pageCurrent);
   };
 
@@ -316,7 +341,7 @@ function Problems({
     }
     let pageCurrent = Math.floor(value);
     if (value <= 0) pageCurrent = minPage;
-
+    localStorage.setItem("maxContestId", pageCurrent);
     setMaxContestId(pageCurrent);
   };
 
@@ -382,7 +407,11 @@ function Problems({
                 </div>
                 <div className="problems__menu-btn-bar__solve-status-selector-group">
                   <div
-                    onClick={() => setFilterSolved(!filterSolved)}
+                    onClick={() => {
+                      const oldData = filterSolved;
+                      localStorage.setItem("filterSolved", !oldData);
+                      setFilterSolved(!oldData);
+                    }}
                     className={
                       filterSolved
                         ? "problems__menu-btn-bar__solve-status-selector-btn active"
@@ -392,7 +421,11 @@ function Problems({
                     SOLVED
                   </div>
                   <div
-                    onClick={() => setFilterAttemped(!filterAttemped)}
+                    onClick={() => {
+                      const oldData = filterAttemped;
+                      localStorage.setItem("filterAttemped", !oldData);
+                      setFilterAttemped(!oldData);
+                    }}
                     className={
                       filterAttemped
                         ? "problems__menu-btn-bar__solve-status-selector-btn active"
@@ -402,7 +435,11 @@ function Problems({
                     ATTEMPED
                   </div>
                   <div
-                    onClick={() => setFilterUnsolved(!filterUnsolved)}
+                    onClick={() => {
+                      const oldData = filterUnsolved;
+                      localStorage.setItem("filterUnsolved", !oldData);
+                      setFilterUnsolved(!oldData);
+                    }}
                     className={
                       filterUnsolved
                         ? "problems__menu-btn-bar__solve-status-selector-btn active"
@@ -480,8 +517,13 @@ function Problems({
                   <select
                     onChange={(e) => {
                       const oldTagSelected = tagSelected;
-                      if (!oldTagSelected.includes(e.target.value))
+                      if (!oldTagSelected.includes(e.target.value)) {
                         setTagSelected([...oldTagSelected, e.target.value]);
+                        localStorage.setItem("tagSelected", [
+                          ...oldTagSelected,
+                          e.target.value,
+                        ]);
+                      }
                     }}
                   >
                     <option value="" disabled selected hidden>
@@ -501,6 +543,7 @@ function Problems({
                           (tag) => tag !== value
                         );
                         setTagSelected(newTags);
+                        localStorage.setItem("tagSelected", newTags);
                       }}
                       className="problems__menu-btn-bar__tag-selector-selected-item"
                     >
@@ -701,6 +744,11 @@ function Problems({
           </div>
         </div>
       </div>
+      <div
+        className={
+          filterTableToggle ? "contests__modal show" : "contests__modal"
+        }
+      ></div>
     </div>
   );
 }
