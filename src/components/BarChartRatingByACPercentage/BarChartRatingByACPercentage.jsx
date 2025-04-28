@@ -133,15 +133,15 @@ function BarChart({ dataUser }) {
   }, [dataUser]);
 
   const getRatingColor = (rating) => {
-    if (rating <= 1200) return "rgb(204, 204, 204)";
-    if (rating <= 1400) return "rgb(119, 255, 119)";
-    if (rating <= 1600) return "rgb(119, 221, 187)";
-    if (rating <= 1900) return "rgb(170, 170, 255)";
-    if (rating <= 2100) return "rgb(255, 136, 255)";
-    if (rating <= 2300) return "rgb(255, 204, 136)";
-    if (rating <= 2400) return "rgb(255, 187, 85)";
-    if (rating <= 2600) return "rgb(255, 119, 119)";
-    if (rating <= 3000) return "rgb(255, 51, 51)";
+    if (rating < 1200) return "rgb(204, 204, 204)";
+    if (rating < 1400) return "rgb(119, 255, 119)";
+    if (rating < 1600) return "rgb(119, 221, 187)";
+    if (rating < 1900) return "rgb(170, 170, 255)";
+    if (rating < 2100) return "rgb(255, 136, 255)";
+    if (rating < 2300) return "rgb(255, 204, 136)";
+    if (rating < 2400) return "rgb(255, 187, 85)";
+    if (rating < 2600) return "rgb(255, 119, 119)";
+    if (rating < 3000) return "rgb(255, 51, 51)";
     return "rgb(170, 0, 0)";
   };
 
