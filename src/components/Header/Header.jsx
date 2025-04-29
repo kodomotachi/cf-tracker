@@ -1,6 +1,6 @@
 import { React, useState, useRef, useEffect } from "react";
 import "./Header.css";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import logo from "../../img/cftracker_logo.png";
 
 const defaultData = [
