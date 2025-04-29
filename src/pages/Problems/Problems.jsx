@@ -358,7 +358,13 @@ function Problems({
           />
         </div>
         <div className="problems__menu-display">
-          Showing {limitPage} of {dataDisplay.length}
+          Showing{" "}
+          {currentPage == maxPage
+            ? dataDisplay.length - (currentPage - 1) * limitPage
+            : limitPage > dataDisplay.length
+            ? dataDisplay.length
+            : limitPage}{" "}
+          of {dataDisplay.length}
         </div>
         <div className="problems__btn-group">
           <div
