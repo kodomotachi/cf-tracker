@@ -239,7 +239,7 @@ function Header({ codeforce, tachi, propHandleUser }) {
               value={search}
               onChange={handeChange}
               onKeyDown={handleKeyDown}
-              placeholder="handle1, handle2, .."
+              placeholder="handle1, handle2, ..."
               className="header__search-box-input"
             />
             <div
