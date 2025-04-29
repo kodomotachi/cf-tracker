@@ -1,6 +1,6 @@
 import { React, useState, useRef, useEffect } from "react";
 import "./Header.css";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import logo from "../../img/cftracker_logo.png";
 
 const defaultData = [
@@ -199,15 +199,39 @@ function Header({ codeforce, tachi, propHandleUser }) {
         </a>
         <div className="header__menu">
           <div className="header__menu-nav">
-            <Link to="/stats" className="header__menu-nav-item">
+            <NavLink
+              to="/stats"
+              end
+              className={({ isActive }) =>
+                isActive
+                  ? "header__menu-nav-item active"
+                  : "header__menu-nav-item"
+              }
+            >
               Stats
-            </Link>
-            <Link to="/problems" className="header__menu-nav-item">
+            </NavLink>
+            <NavLink
+              to="/problems"
+              end
+              className={({ isActive }) =>
+                isActive
+                  ? "header__menu-nav-item active"
+                  : "header__menu-nav-item"
+              }
+            >
               Problems
-            </Link>
-            <Link to="/contests" className="header__menu-nav-item">
+            </NavLink>
+            <NavLink
+              to="/contests"
+              end
+              className={({ isActive }) =>
+                isActive
+                  ? "header__menu-nav-item active"
+                  : "header__menu-nav-item"
+              }
+            >
               Contests
-            </Link>
+            </NavLink>
           </div>
           <div className="header__search-box">
             <input
