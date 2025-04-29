@@ -1,0 +1,37 @@
+[33m591b96c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfix-display-and-bug-router[m[33m, [m[1;31morigin/fix-display-and-bug-router[m[33m)[m HEAD@{0}: commit: fix display header
+[33m48eae84[m[33m ([m[1;32mtachi-testing[m[33m)[m HEAD@{1}: checkout: moving from tachi-testing to fix-display-and-bug-router
+[33m48eae84[m[33m ([m[1;32mtachi-testing[m[33m)[m HEAD@{2}: reset: moving to 48eae84
+[33m5ab9cc6[m HEAD@{3}: reset: moving to 5ab9cc6
+[33ma7c2a2d[m[33m ([m[1;31morigin/tachi-testing[m[33m)[m HEAD@{4}: pull: Fast-forward
+[33m5ab9cc6[m HEAD@{5}: checkout: moving from fix-display-and-bug-router to tachi-testing
+[33m48eae84[m[33m ([m[1;32mtachi-testing[m[33m)[m HEAD@{6}: commit: change color pie chart
+[33mace687d[m HEAD@{7}: pull: Fast-forward
+[33mc316c8a[m HEAD@{8}: pull: Merge made by the 'ort' strategy.
+[33m78ca514[m HEAD@{9}: commit: fix key element
+[33md00a3ec[m HEAD@{10}: reset: moving to d00a3ec
+[33m585ad57[m HEAD@{11}: pull: Fast-forward
+[33md00a3ec[m HEAD@{12}: commit: fix display list contests
+[33m176bc28[m[33m ([m[1;32mfront-end[m[33m)[m HEAD@{13}: checkout: moving from front-end to fix-display-and-bug-router
+[33m176bc28[m[33m ([m[1;32mfront-end[m[33m)[m HEAD@{14}: commit: fix display filter-table, display data on problems page, update store data filter on local storage, fix logo website display, fix change router
+[33mf0f8c06[m HEAD@{15}: commit: fix sorted in problems page
+[33m1a427c0[m HEAD@{16}: commit: fix display scroll-up-btn
+[33m07bca42[m HEAD@{17}: commit: build chart in stats page
+[33md5139ca[m HEAD@{18}: commit: fix bug duplicate heatmap
+[33md5973d2[m HEAD@{19}: commit: build heatmap
+[33mb665ff2[m HEAD@{20}: commit: fix call api, display on contests page
+[33m43b2271[m HEAD@{21}: commit: fix display problem
+[33mac240bf[m HEAD@{22}: commit: fix refresh button
+[33m59ed858[m HEAD@{23}: commit: filter table, get handle on contest page
+[33ma81f315[m HEAD@{24}: commit: build filter by div
+[33m37b46ec[m HEAD@{25}: commit: build display of page contests
+[33me279482[m HEAD@{26}: commit: fix filter, get data from api user
+[33m81a994b[m HEAD@{27}: commit: build page bar
+[33mf8846dd[m HEAD@{28}: commit: change logo
+[33me6a31cf[m HEAD@{29}: commit: build sort function
+[33m7e26fc7[m HEAD@{30}: commit: build front-end
+[33m79cd39e[m[33m ([m[1;32mmain[m[33m)[m HEAD@{31}: Branch: renamed refs/heads/front-end to refs/heads/front-end
+[33m79cd39e[m[33m ([m[1;32mmain[m[33m)[m HEAD@{33}: Branch: renamed refs/heads/font-end to refs/heads/front-end
+[33m79cd39e[m[33m ([m[1;32mmain[m[33m)[m HEAD@{35}: checkout: moving from main to font-end
+[33m79cd39e[m[33m ([m[1;32mmain[m[33m)[m HEAD@{36}: commit: reset css, build problem page
+[33mf14d45d[m HEAD@{37}: pull: Fast-forward
+[33mc8148ef[m HEAD@{38}: clone: from https://github.com/kodomotachi/cf-tracker.git
