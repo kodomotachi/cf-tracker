@@ -9,7 +9,7 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
   const [problems, setProblems] = useState([]);
   const [userProblems, setUserProblems] = useState([]);
   const [contests, setContests] = useState([]);
-  const [oldData, setOldData] = useState([]);
+  const [dataFiltered, setDataFiltered] = useState([]);
   const [data, setData] = useState([]);
   const [categoriesContest, setCategoriesContest] = useState([
     "Div. 1",
@@ -212,15 +212,10 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
     });
     setData(newData);
     setDataDisplay(newData2);
-    setOldData(newData);
+    setDataFiltered(newData2);
   }, [contests, problems, userProblems]);
 
   useEffect(() => {
-    //  if (dataUser == "") {
-    //    setData(oldData);
-    //    setDataDisplay(oldData);
-    //    return;
-    //  }
     const verdictMap = {};
 
     dataUser.forEach((value) => {
@@ -271,6 +266,7 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
     });
 
     setDataDisplay(newData2);
+    setDataFiltered(newData2);
     setGotoPage(1);
   }, [filterDiv, filterSolved, filterAttemped, filterUnsolved]);
 
@@ -406,10 +402,7 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
 
   const handleRefresh = () => {
     setSearch("");
-    setDataDisplay(data);
-    setFilterSolved(0);
-    setFilterAttemped(0);
-    setUnSolved(1);
+    setDataDisplay(dataFiltered);
   };
 
   const handleChangePage = (value) => {
@@ -630,39 +623,47 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
                     viewSelect["Short Name"]
                       ? value.shortName.length > 0
                         ? "contests__table__content-item  min-width-160"
-                        : "contests__table__content-item  min-width-160 clean"
-                      : "contests__table__content-item  min-width-280"
+                        : "contests__table__content-item  min-width-160 "
+                      : "contests__table__content-item  min-width-280 "
                   }
                 >
-                  <a
-                    href={`https://codeforces.com/contest/${value.id}`}
-                    target="_blank"
-                    className="contests__table__content-item-title "
-                  >
-                    {viewSelect["Short Name"] && value.shortName.length > 0
-                      ? value.shortName
-                      : value.name}
+                  <div className="contests__table__content-item-group">
+                    <a
+                      href={`https://codeforces.com/contest/${value.id}`}
+                      target="_blank"
+                      className={
+                        viewSelect["Short Name"]
+                          ? "contests__table__content-item-title clean"
+                          : "contests__table__content-item-title"
+                      }
+                    >
+                      {viewSelect["Short Name"] && value.shortName.length > 0
+                        ? value.shortName
+                        : value.name}
+
+                      <div
+                        className={
+                          viewSelect["Date"]
+                            ? "contests__table__content-item-title-date active"
+                            : "contests__table__content-item-title-date"
+                        }
+                      >
+                        {value.formattedTime}
+                      </div>
+                    </a>
                     <div
                       className={
                         viewSelect["Short Name"] &&
                         !value.div.includes("Educational") &&
-                        !value.div.includes("Global")
+                        !value.div.includes("Global") &&
+                        !value.div.includes("Other")
                           ? "contests__table__content-item-title-div active"
                           : "contests__table__content-item-title-div"
                       }
                     >
                       {value.div}
                     </div>
-                    <div
-                      className={
-                        viewSelect["Date"]
-                          ? "contests__table__content-item-title-date active"
-                          : "contests__table__content-item-title-date"
-                      }
-                    >
-                      {value.formattedTime}
-                    </div>
-                  </a>
+                  </div>
                 </div>
 
                 {orderProblems.map((letter) => {

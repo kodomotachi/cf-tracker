@@ -331,22 +331,17 @@
   justify-content: center;
 }
 
-.contests__table__content-item.clean .contests__table__content-item-title {
+.contests__table__content-item .contests__table__content-item-title.clean {
   display: block;
   width: 100%;
-  max-width: 160px;
-  overflow: hidden;
+  max-width: 120px;
+  overflow-x: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.contests__table__content-item-text {
-  display: block;
-  width: 100%;
-  max-width: 160px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.contests__table__content-item-group {
+  position: relative;
 }
 
 .contests__table__content-item-rating {
