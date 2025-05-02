@@ -9,7 +9,7 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
   const [problems, setProblems] = useState([]);
   const [userProblems, setUserProblems] = useState([]);
   const [contests, setContests] = useState([]);
-  const [oldData, setOldData] = useState([]);
+  const [dataFiltered, setDataFiltered] = useState([]);
   const [data, setData] = useState([]);
   const [categoriesContest, setCategoriesContest] = useState([
     "Div. 1",
@@ -212,15 +212,10 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
     });
     setData(newData);
     setDataDisplay(newData2);
-    setOldData(newData);
+    setDataFiltered(newData2);
   }, [contests, problems, userProblems]);
 
   useEffect(() => {
-    //  if (dataUser == "") {
-    //    setData(oldData);
-    //    setDataDisplay(oldData);
-    //    return;
-    //  }
     const verdictMap = {};
 
     dataUser.forEach((value) => {
@@ -271,6 +266,7 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
     });
 
     setDataDisplay(newData2);
+    setDataFiltered(newData2);
     setGotoPage(1);
   }, [filterDiv, filterSolved, filterAttemped, filterUnsolved]);
 
@@ -406,7 +402,7 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
 
   const handleRefresh = () => {
     setSearch("");
-    setDataDisplay(data);
+    setDataDisplay(dataFiltered);
   };
 
   const handleChangePage = (value) => {
