@@ -268,7 +268,7 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
     setDataDisplay(newData2);
     setDataFiltered(newData2);
     setGotoPage(1);
-  }, [filterDiv, filterSolved, filterAttemped, filterUnsolved]);
+  }, [data, filterDiv, filterSolved, filterAttemped, filterUnsolved]);
 
   const toggleItemDiv = (div) => {
     if (div === "All") {
