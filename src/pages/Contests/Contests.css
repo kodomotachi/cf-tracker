@@ -344,6 +344,15 @@
   position: relative;
 }
 
+.contests__table__content-item-text {
+  display: block;
+  width: 100%;
+  max-width: 160px;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .contests__table__content-item-rating {
   display: none;
   font-size: 16px;
