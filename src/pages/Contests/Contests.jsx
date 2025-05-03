@@ -624,7 +624,7 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
                       ? value.shortName.length > 0
                         ? "contests__table__content-item  min-width-160"
                         : "contests__table__content-item  min-width-160 "
-                      : "contests__table__content-item  min-width-280 "
+                      : "contests__table__content-item  min-width-280"
                   }
                 >
                   <div className="contests__table__content-item-group">
