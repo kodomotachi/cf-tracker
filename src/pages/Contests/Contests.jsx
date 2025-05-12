@@ -91,6 +91,7 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
   }, [propProblems, propListTag, propContests]);
 
   useEffect(() => {
+    if (dataDisplay.length == 0) return;
     const order = new Set();
     dataDisplay
       .slice((currentPage - 1) * limitPage, currentPage * limitPage)
@@ -267,7 +268,6 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
 
     setDataDisplay(newData2);
     setDataFiltered(newData2);
-    setGotoPage(1);
   }, [data, filterDiv, filterSolved, filterAttemped, filterUnsolved]);
 
   const toggleItemDiv = (div) => {
@@ -335,7 +335,6 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
     );
 
     setDataDisplay(results);
-    setGotoPage(1);
   };
 
   const getRatingColor = (rating) => {
@@ -385,7 +384,10 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
     //  if (dataDisplay.length > 0 && !perPage.includes(dataDisplay.length)) {
     //    setPerPage([10, 20, 50, 100, 200, dataDisplay.length]);
     //  }
+    setMinPage(dataDisplay.length > 0 ? 1 : 0);
     setMaxPage(Math.ceil(dataDisplay.length / limitPage));
+    setCurrentPage(dataDisplay.length > 0 ? 1 : 0);
+    setGotoPage(dataDisplay.length > 0 ? 1 : 0);
   }, [dataDisplay, limitPage]);
 
   useEffect(() => {
@@ -445,7 +447,7 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
         </div>
         <div className="contests__menu-display">
           Showing{" "}
-          {currentPage == maxPage
+          {currentPage == maxPage && dataDisplay.length > 0
             ? dataDisplay.length - (currentPage - 1) * limitPage
             : limitPage > dataDisplay.length
             ? dataDisplay.length
@@ -781,7 +783,7 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
           <input
             type="number"
             name="gotoPage"
-            placeholder="Max Rating"
+            placeholder=""
             step="1"
             value={gotoPage}
             onChange={(e) => handleChangePage(e.target.value)}
@@ -793,7 +795,7 @@ function Contest({ dataUser, propProblems, propContests, propListTag }) {
             <select
               onChange={(e) => {
                 setLimitPage(e.target.value);
-                setGotoPage(1);
+                setGotoPage(dataDisplay.length > 0 ? 1 : 0);
               }}
             >
               {perPage.map((value, index) => (
