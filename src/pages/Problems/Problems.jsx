@@ -268,7 +268,10 @@ function Problems({
     //  if (data.length > 0 && !perPage.includes(data.length)) {
     //    setPerPage([10, 20, 50, 100, 200, data.length]);
     //  }
+    setMinPage(dataDisplay.length > 0 ? 1 : 0);
     setMaxPage(Math.ceil(dataDisplay.length / limitPage));
+    setGotoPage(dataDisplay.length > 0 ? 1 : 0);
+    setCurrentPage(dataDisplay.length > 0 ? 1 : 0);
   }, [dataDisplay, limitPage]);
 
   useEffect(() => {
@@ -359,7 +362,7 @@ function Problems({
         </div>
         <div className="problems__menu-display">
           Showing{" "}
-          {currentPage == maxPage
+          {currentPage == maxPage && dataDisplay.length > 0
             ? dataDisplay.length - (currentPage - 1) * limitPage
             : limitPage > dataDisplay.length
             ? dataDisplay.length
@@ -727,7 +730,7 @@ function Problems({
           <input
             type="number"
             name="gotoPage"
-            placeholder="Max Rating"
+            placeholder=""
             step="1"
             value={gotoPage}
             onChange={(e) => handleChangePage(e.target.value)}
@@ -739,7 +742,7 @@ function Problems({
             <select
               onChange={(e) => {
                 setLimitPage(e.target.value);
-                setGotoPage(1);
+                setGotoPage(dataDisplay.length > 0 ? 1 : 0);
               }}
             >
               {perPage.map((value, index) => (

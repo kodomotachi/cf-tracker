@@ -192,7 +192,7 @@
 .header__search-box-alert--failed:hover .header__search-box-alert--failed-line {
   animation-play-state: paused;
 }
--------- .header__search-box-alert--successful {
+.header__search-box-alert--successful {
   max-width: 300px;
   line-height: 1.4;
   display: flex;
